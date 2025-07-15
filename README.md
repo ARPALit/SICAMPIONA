@@ -2,43 +2,39 @@ SICampiona
 
 Sommario
 
-[1\. SICampiona 2](#_Toc198734351)
+[1\. SICampiona](#_Toc198734351)
 
-[2\. Descrizione e finalità del software 2](#_Toc198734352)
+[2\. Descrizione e finalità del software](#_Toc198734352)
 
-[2.1. Struttura del repository 2](#_Toc198734353)
+[2.1. Struttura del repository](#_Toc198734353)
 
-[2.2. Finalità del software 2](#_Toc198734354)
+[2.2. Finalità del software](#_Toc198734354)
 
-[2.3. Contesto di utilizzo e casi d’uso 2](#_Toc198734355)
+[2.3. Contesto di utilizzo e casi d’uso](#_Toc198734355)
 
-[2.4. Screenshots 2](#_Toc198734356)
+[3\. Architettura del software](#_Toc198734358)
 
-[2.5. Links 2](#_Toc198734357)
+[3.1. Requisiti e dipendenze](#_Toc198734359)
 
-[3\. Architettura del software 2](#_Toc198734358)
+[3.2. Descrizione architettura](#_Toc198734360)
 
-[3.1. Requisiti e dipendenze 2](#_Toc198734359)
+[4\. Riuso ed installazione](#_Toc198734361)
 
-[3.2. Descrizione architettura 3](#_Toc198734360)
+[4.1. Installazione ambiente di sviluppo](#_Toc198734362)
 
-[4\. Riuso ed installazione 4](#_Toc198734361)
+[4.2. Compilazione software](#_Toc198734363)
 
-[4.1. Installazione ambiente di sviluppo 4](#_Toc198734362)
+[4.3. Installazione software](#_Toc198734364)
 
-[4.2. Compilazione software 5](#_Toc198734363)
+[5\. Modello dati](#_Toc198734365)
 
-[4.3. Installazione software 5](#_Toc198734364)
+[6\. Descrizione API applicazione back end](#_Toc198734366)
 
-[5\. Modello dati 11](#_Toc198734365)
+[7\. Dati da servizi esterni](#_Toc198734367)
 
-[6\. Descrizione API applicazione back end 13](#_Toc198734366)
+[Servizio anagrafiche esterne](#_Toc198734368)
 
-[7\. Dati da servizi esterni 14](#_Toc198734367)
-
-[Servizio anagrafiche esterne 14](#_Toc198734368)
-
-[Servizio informazioni sui campioni 17](#_Toc198734369)
+[Servizio informazioni sui campioni](#_Toc198734369)
 
 ## SICampiona
 
@@ -63,10 +59,6 @@ Il sistema SICampiona è stato sviluppato per consentire la memorizzazione delle
 L'accesso al sistema è possibile mediante l'uso di SPID ???? ed è consentito sia agli operatori ARPAL sia a quegli enti esterni che periodicamente effettuano la raccolta di campioni da analizzare presso i laboratori ARPAL (ad esempio le ASL).
 
 Il sistema si interfaccia con il sistema di gestione del laboratorio di ARPAL per il caricamento automatico delle informazioni di campionamento all'atto della consegna e dell'accettazione del campione in ARPAL.
-
-### Screenshots
-
-### Links
 
 ### Status del progetto
 
