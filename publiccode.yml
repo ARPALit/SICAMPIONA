@@ -1,0 +1,41 @@
+publiccodeYmlVersion: 0.4.0
+name: SIACAMPIONA
+url: https://github.com/ARPALit/SICAMPIONA/
+landingURL: https://github.com/ARPALit/SICAMPIONA/
+platforms:
+  - web
+categories:
+  - data-collection
+developmentStatus: stable
+softwareType: standalone/web
+description:
+  en:
+    localisedName: SICAMPIONA
+    shortDescription: A system for recording sampling activity data
+    longDescription: The SICampiona system has been developed to allow the storage
+      of sampling activities carried out by ARPAL or external entities for
+      samples that are subsequently delivered to ARPAL to perform analysis
+      activities in its laboratories.
+    features:
+      - Data uploading in online and offline modes
+      - Generation of sampling reports
+      - Integration with laboratory information management system (LIMS)
+  it:
+    localisedName: SICAMPIONA
+    shortDescription: Sistema per la registrazione dei dati di attività di campionamento
+    longDescription: Il sistema SICampiona è stato sviluppato per consentire la
+      memorizzazione delle attività di campionamento svolte da ARPAL o da
+      esterni relativamente a campioni che vengono successivamente consegnati ad
+      ARPAL per svolgere attività di analisi nei laboratori di quest'ultima.
+    features:
+      - Caricamento dei dati in modalità online e offline
+      - Generazione dei verbali di campionamento
+      - Integrazione con sistema di gestione laboratorio (LIMS)
+legal:
+  license: AGPL-1.0-or-later
+maintenance:
+  type: contract
+localisation:
+  localisationReady: false
+  availableLanguages:
+    - it
