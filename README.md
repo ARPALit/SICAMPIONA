@@ -56,7 +56,7 @@ Il sistema SICampiona è stato sviluppato per consentire la memorizzazione delle
 
 ### Contesto di utilizzo e casi d’uso
 
-L'accesso al sistema è possibile mediante l'uso di SPID ???? ed è consentito sia agli operatori ARPAL sia a quegli enti esterni che periodicamente effettuano la raccolta di campioni da analizzare presso i laboratori ARPAL (ad esempio le ASL).
+L'accesso al sistema è possibile mediante l'uso di credenziali digitali (SPID) ed è consentito sia agli operatori ARPAL sia a quegli enti esterni che periodicamente effettuano la raccolta di campioni da analizzare presso i laboratori ARPAL (ad esempio le ASL).
 
 Il sistema si interfaccia con il sistema di gestione del laboratorio di ARPAL per il caricamento automatico delle informazioni di campionamento all'atto della consegna e dell'accettazione del campione in ARPAL.
 
