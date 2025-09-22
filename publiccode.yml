@@ -6,6 +6,8 @@ platforms:
   - web
 categories:
   - data-collection
+usedBy:
+  - ARPAL - Agenzia per la Protezione dell'Ambiente Ligure
 developmentStatus: stable
 softwareType: standalone/web
 description:
@@ -17,18 +19,16 @@ description:
       samples that are subsequently delivered to ARPAL to perform analysis
       activities in its laboratories.
     features:
-      - Data uploading in online and offline modes
-      - Generation of sampling reports
-      - Integration with laboratory information management system (LIMS)
+      - Gestionale
   it:
     localisedName: SICAMPIONA
-    shortDescription: Sistema per la registrazione dei dati di attivit‡ di campionamento
-    longDescription: Il sistema SICampiona Ë stato sviluppato per consentire la
-      memorizzazione delle attivit‡ di campionamento svolte da ARPAL o da
+    shortDescription: Sistema per la registrazione dei dati di attivit√† di campionamento
+    longDescription: Il sistema SICampiona √® stato sviluppato per consentire la
+      memorizzazione delle attivit√† di campionamento svolte da ARPAL o da
       esterni relativamente a campioni che vengono successivamente consegnati ad
-      ARPAL per svolgere attivit‡ di analisi nei laboratori di quest'ultima.
+      ARPAL per svolgere attivit√† di analisi nei laboratori di quest'ultima.
     features:
-      - Caricamento dei dati in modalit‡ online e offline
+      - Caricamento dei dati in modalit√† online e offline
       - Generazione dei verbali di campionamento
       - Integrazione con sistema di gestione laboratorio (LIMS)
 legal:
