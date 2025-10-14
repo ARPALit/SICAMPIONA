@@ -1,32 +1,25 @@
 publiccodeYmlVersion: 0.4.0
-name: SIACAMPIONA
+name: SICAMPIONA
 url: https://github.com/ARPALit/SICAMPIONA/
-landingURL: https://github.com/ARPALit/SICAMPIONA/
+softwareVersion: "1.0"
+releaseDate: 2025-01-01
 platforms:
   - web
 categories:
   - data-collection
 usedBy:
-  - ARPAL - Agenzia per la Protezione dell'Ambiente Ligure
+  - ARPAL - Agenzia Protezione Ambiente Ligure
 developmentStatus: stable
 softwareType: standalone/web
 description:
-  en:
-    localisedName: SICAMPIONA
-    shortDescription: A system for recording sampling activity data
-    longDescription: The SICampiona system has been developed to allow the storage
-      of sampling activities carried out by ARPAL or external entities for
-      samples that are subsequently delivered to ARPAL to perform analysis
-      activities in its laboratories.
-    features:
-      - Gestionale
   it:
     localisedName: SICAMPIONA
     shortDescription: Sistema per la registrazione dei dati di attività di campionamento
-    longDescription: Il sistema SICampiona è stato sviluppato per consentire la
-      memorizzazione delle attività di campionamento svolte da ARPAL o da
-      esterni relativamente a campioni che vengono successivamente consegnati ad
-      ARPAL per svolgere attività di analisi nei laboratori di quest'ultima.
+    longDescription: >2-
+       Il sistema SICampiona è stato sviluppato per consentire la
+            memorizzazione delle attività di campionamento svolte da ARPAL o da
+            esterni relativamente a campioni che vengono successivamente consegnati ad
+            ARPAL per svolgere attività di analisi nei laboratori di quest'ultima.
     features:
       - Caricamento dei dati in modalità online e offline
       - Generazione dei verbali di campionamento
@@ -34,8 +27,14 @@ description:
 legal:
   license: AGPL-1.0-or-later
 maintenance:
-  type: contract
+  type: none
 localisation:
   localisationReady: false
   availableLanguages:
     - it
+it:
+  countryExtensionVersion: "1.0"
+  conforme:
+    misureMinimeSicurezza: true
+  riuso:
+    codiceIPA: arlpa_ge
