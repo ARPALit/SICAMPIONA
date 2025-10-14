@@ -27,7 +27,11 @@ description:
 legal:
   license: AGPL-1.0-or-later
 maintenance:
-  type: none
+  type: internal
+  contacts:
+    - name: Marco Poddine
+      email: sii@arpal.liguria.it
+      phone: "0106437666"
 localisation:
   localisationReady: false
   availableLanguages:
@@ -38,3 +42,4 @@ it:
     misureMinimeSicurezza: true
   riuso:
     codiceIPA: arlpa_ge
+
