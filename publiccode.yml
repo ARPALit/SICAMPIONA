@@ -41,8 +41,14 @@ localisation:
 it:
   countryExtensionVersion: "1.0"
   conforme:
+    modelloInteroperabilita: true
     misureMinimeSicurezza: true
+    gdpr: true
+  piattaforme:
+    spid: true
+    cie: false
+    anpr: false
+    pagopa: false
+    io: false
   riuso:
     codiceIPA: arlpa_ge
-
-
