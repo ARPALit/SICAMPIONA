@@ -16,7 +16,7 @@ description:
   it:
     localisedName: SICAMPIONA
     shortDescription: Sistema per la registrazione dei dati di attività di campionamento
-    longDescription: >2-
+    longDescription:
        Il sistema SICampiona è stato sviluppato per consentire la
             memorizzazione delle attività di campionamento svolte da ARPAL o da
             esterni relativamente a campioni che vengono successivamente consegnati ad
@@ -44,4 +44,5 @@ it:
     misureMinimeSicurezza: true
   riuso:
     codiceIPA: arlpa_ge
+
 
