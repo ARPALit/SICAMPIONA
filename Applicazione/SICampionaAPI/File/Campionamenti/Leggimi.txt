@@ -1,0 +1,1 @@
+﻿Questa cartella contiene i PDF del verbale e del rapporto cartelle aventi come nome l'id del campionamento

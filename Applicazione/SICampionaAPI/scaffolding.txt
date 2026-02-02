@@ -1,0 +1,1 @@
+Scaffold-DbContext "user id=SICAMPIONA;password=SICAMPIONA;data source=localhost/xe" Oracle.EntityFrameworkCore -OutputDir Data -UseDatabaseNames -Context SICampionaContext -Force -NoPluralize  -t ANALITI,CAMPIONAMENTI,CONTENITORI,MISURE_IN_LOCO,PRELEVATORI,PRELEVATORI_SELEZIONABILI,TIPI_CAMPIONAMENTO
