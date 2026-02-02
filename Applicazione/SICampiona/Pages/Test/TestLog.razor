@@ -1,0 +1,18 @@
+﻿@page "/testlog"
+@inject ILogger<TestLog> logger
+
+<h3>TestLog</h3>
+
+<button class="btn btn-primary" @onclick="Test">Test</button>
+
+@code {
+	private void Test()
+	{
+		logger.LogCritical("This is critical.");
+		logger.LogError("This is error.");
+		logger.LogWarning("This is warning.");
+		logger.LogInformation("This is info.");
+		logger.LogDebug("This is debug.");
+		logger.LogTrace("This is trace.");
+	}
+}

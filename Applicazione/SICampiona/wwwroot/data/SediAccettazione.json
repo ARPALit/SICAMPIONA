@@ -1,0 +1,18 @@
+[
+  {
+    "Codice": "GE",
+    "Denominazione": "Genova"
+  },
+  {
+    "Codice": "IM",
+    "Denominazione": "Imperia"
+  },
+  {
+    "Codice": "SV",
+    "Denominazione": "Savona"
+  },
+  {
+    "Codice": "SP",
+    "Denominazione": "La Spezia"
+  }
+]

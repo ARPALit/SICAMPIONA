@@ -1,0 +1,124 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@implements IDialogContentComponent<ModificaPrelevatoriContent>
+
+<FluentStack Orientation="Orientation.Vertical">
+	<FluentDataGrid Items="@Content.Prelevatori.AsQueryable()" EmptyContent="nessunDato">
+		<PropertyColumn Property="@(c => c.Cognome)" Title="Cognome" Class="multiline-text" />
+		<PropertyColumn Property="@(c => c.Nome)" Title="Nome" Class="multiline-text" />
+		<TemplateColumn Align="@Align.End">
+			<FluentButton IconEnd="@(new Icons.Regular.Size16.PersonDelete())" OnClick="@(() => Elimina(context))" />
+		</TemplateColumn>
+	</FluentDataGrid>
+	<FluentStack>
+		<FluentSelect TOption="Prelevatore"
+					  Items="@prelevatoriSelezionabili"
+					  Id="prevatori-listbox"
+					  OptionValue="@(p => p.Codice)"
+					  OptionText="@(p => p.Cognome + ' ' + p.Nome)"
+					  Height="200px"
+					  @bind-Value="@codicePrelevatoreSelezionato" />
+		<FluentButton IconEnd="@(new Icons.Regular.Size16.PersonAdd())" OnClick="@Aggiungi" />
+	</FluentStack>
+</FluentStack>
+
+<FluentDialogFooter>
+	<FluentButton Appearance="Appearance.Accent" OnClick="@SaveAsync">Salva</FluentButton>
+	<FluentButton Appearance="Appearance.Accent" OnClick="@CancelAsync">Annulla</FluentButton>
+</FluentDialogFooter>
+
+
+@code {
+
+	[Parameter]
+	public ModificaPrelevatoriContent Content { get; set; } = default!;
+
+	[CascadingParameter]
+	public FluentDialog Dialog { get; set; }
+
+	RenderFragment nessunDato => @<FluentLabel>Nessun prelevatore selezionato</FluentLabel>;
+
+	private string codicePrelevatoreSelezionato;
+	private List<Prelevatore> prelevatoriSelezionabili;
+
+	protected override void OnInitialized()
+	{
+		PopolaPrelevatoriSelezionabili();
+		OrdinaElenchi();
+	}
+
+	private void PopolaPrelevatoriSelezionabili()
+	{
+		// I prelevatori selezionabili sono tutti quelli che non sono già presenti nella lista dei prelevatori
+		prelevatoriSelezionabili = Content.PrelevatoriSelezionabili.Where(p => !Content.Prelevatori.Any(p2 => p2.Codice == p.Codice)).ToList();
+
+		// Aggiungo un prelevatore fittizio per poter selezionare nessun prelevatore
+		prelevatoriSelezionabili.Insert(0, new Prelevatore { Codice = null, Cognome = string.Empty, Nome = string.Empty });
+	}	
+
+	private void Elimina(Prelevatore prelevatore)
+	{
+		Content.Prelevatori.Remove(prelevatore);
+		prelevatoriSelezionabili.Add(prelevatore);
+		OrdinaElenchi();
+	}
+
+	private void Aggiungi()
+	{
+		if (!string.IsNullOrEmpty(codicePrelevatoreSelezionato))
+		{
+			var prelevatore = prelevatoriSelezionabili.FirstOrDefault(p => p.Codice == codicePrelevatoreSelezionato);
+			if (prelevatore != null)
+			{
+				prelevatoriSelezionabili.Remove(prelevatore);
+				Content.Prelevatori.Add(prelevatore);
+				OrdinaElenchi();
+			}
+		};
+	}
+
+	private void OrdinaElenchi()
+	{
+		Content.Prelevatori = Content.Prelevatori.OrderBy(i => i.Cognome).ThenBy(i => i.Nome).ToList();
+		prelevatoriSelezionabili = prelevatoriSelezionabili.OrderBy(i => i.Cognome).ThenBy(i => i.Nome).ToList();
+		ImpostaPrimoOperatoreSelezionabile();
+	}
+
+	private void ImpostaPrimoOperatoreSelezionabile()
+	{
+		if (prelevatoriSelezionabili.Any())
+		{
+			codicePrelevatoreSelezionato = prelevatoriSelezionabili.First().Codice;
+		}
+		else
+		{
+			codicePrelevatoreSelezionato = string.Empty;
+		};
+	}
+
+	private async Task SaveAsync()
+	{
+		await Dialog.CloseAsync(Content);
+	}
+
+	private async Task CancelAsync()
+	{
+		await Dialog.CancelAsync();
+	}
+}

@@ -1,0 +1,114 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@implements IDialogContentComponent<InserimentoDataOraContent>
+
+<FluentStack VerticalAlignment="VerticalAlignment.Center">
+	@if (Content.VisualizzaData)
+	{
+		<FluentDatePicker Value=@Content.ValoreDataInserito
+						  Label=@Content.Etichetta
+						  ValueChanged="ValoreDataModificato" />
+	}
+	@if (Content.VisualizzaOra)
+	{
+		<FluentTimePicker Value=@Content.ValoreOraInserito
+						  Label=@etichettaOra
+						  ValueChanged="ValoreOraModificato"
+						  Immediate="true" />
+	}
+	<FluentButton Title="Cancella"
+				  Appearance="Appearance.Neutral"
+				  OnClick="@(() => NessunaSelezione())">
+		<FluentIcon Value="@(new Icons.Regular.Size16.Backspace())" Color="Color.Neutral" />
+	</FluentButton>
+</FluentStack>
+
+<FluentDialogFooter>
+	<FluentButton Appearance="Appearance.Accent" OnClick="@SaveAsync" >Salva</FluentButton>
+	<FluentButton Appearance="Appearance.Accent" OnClick="@CancelAsync">Annulla</FluentButton>
+</FluentDialogFooter>
+
+@code {
+
+	[Parameter]
+	public InserimentoDataOraContent Content { get; set; } = default!;
+
+	[CascadingParameter]
+	public FluentDialog Dialog { get; set; }
+
+	string etichettaOra;
+
+	protected override void OnInitialized()
+	{
+		if (Content.VisualizzaData)
+			etichettaOra = null;
+		else
+			etichettaOra = Content.Etichetta;
+		AbilitaConferma();
+	}
+
+	private void ValoreDataModificato(DateTime? valore)
+	{
+		Content.ValoreDataInserito = valore;
+		AbilitaConferma();
+	}
+
+	private void ValoreOraModificato(DateTime? valore)
+	{
+		Content.ValoreOraInserito = valore;
+		AbilitaConferma();
+	}
+
+	private void AbilitaConferma()
+	{
+		Dialog!.TogglePrimaryActionButton(true);
+
+		if (!Content.Obbligatorio)
+			return;
+
+		if (Content.VisualizzaData && !Content.ValoreDataInserito.HasValue)
+		{
+			Dialog!.TogglePrimaryActionButton(false);
+			return;
+		}
+
+		if (Content.VisualizzaOra && !Content.ValoreOraInserito.HasValue)
+		{
+			Dialog!.TogglePrimaryActionButton(false);
+			return;
+		}
+	}
+
+	private void NessunaSelezione()
+	{
+		Content.ValoreDataInserito = null;
+		Content.ValoreOraInserito = null;
+		AbilitaConferma();
+	}
+
+	private async Task SaveAsync()
+	{
+		await Dialog.CloseAsync(Content);
+	}
+
+	private async Task CancelAsync()
+	{
+		await Dialog.CancelAsync();
+	}
+}

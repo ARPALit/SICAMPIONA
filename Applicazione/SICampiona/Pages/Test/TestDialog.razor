@@ -1,0 +1,489 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@page "/dialog"
+@using Pages.Dialog
+@using System.Text
+
+
+@inject IDialogService DialogService
+
+<h3>Test Dialog</h3>
+
+<NavLink class="nav-link" href="./">
+	Elenco attività
+</NavLink>
+
+<FluentLabel Typo="Typography.Header" Color="Color.Warning"> Fare login! </FluentLabel>
+
+<!-- Clienti -->
+<div>
+	<FluentButton @onclick="@RicercaClienteDialog" Appearance="Appearance.Accent">
+		Ricerca cliente
+	</FluentButton>
+</div>
+<div>
+	<FluentLabel Typo="Typography.Body">
+		@risultatoSelezioneCliente
+	</FluentLabel>
+</div>
+
+@code {
+
+	ClienteConIndirizzo datiCliente = new();
+	string risultatoSelezioneCliente;
+
+	private async Task RicercaClienteDialog()
+	{
+		DialogParameters parametriDialog = new()
+			{
+				Title = "Selezione cliente",
+				DismissTitle = "Annulla",
+				Width = "60%"
+			};
+
+		IDialogReference dialog = await DialogService.ShowDialogAsync<SelezioneCliente>(datiCliente, parametriDialog);
+		DialogResult result = await dialog.Result;
+
+		if (result.Cancelled)
+		{
+			risultatoSelezioneCliente = "Annullata";
+		}
+		else
+		{
+			risultatoSelezioneCliente = $"Codice cliente: {datiCliente.Codice} - Denominazione: {datiCliente.Denominazione}";
+		}
+	}
+}
+
+
+<!-- Analiti -->
+<div>
+	<FluentButton @onclick="@RicercaAnalitaDialog" Appearance="Appearance.Accent">
+		Ricerca analita
+	</FluentButton>
+</div>
+<div>
+	<FluentLabel Typo="Typography.Body">
+		@risultatoSelezioneAnalita
+	</FluentLabel>
+</div>
+
+@code {
+
+	string risultatoSelezioneAnalita;
+
+	SelezioneAnalitaContent selezioneAnalita = new();
+	
+	private async Task RicercaAnalitaDialog()
+	{
+		// Utilizzare il codice matrice del campionamento
+		selezioneAnalita.CodiceMatrice = "MTX0000002";
+
+		DialogParameters parametriDialog = new()
+			{
+				Title = "Selezione analita",
+				DismissTitle = "Annulla",
+				Width = "60%"
+			};
+
+		IDialogReference dialog = await DialogService.ShowDialogAsync<SelezioneAnalita>(selezioneAnalita, parametriDialog);
+		DialogResult result = await dialog.Result;
+
+		if (result.Cancelled)
+		{
+			risultatoSelezioneAnalita = "Annullato";
+		}
+		else
+		{
+			risultatoSelezioneAnalita = $"Codice: {selezioneAnalita.Analita.Codice} - Denominazione: {selezioneAnalita.Analita.Descrizione} " +
+			$"N° contenitori: {selezioneAnalita.Analita.Contenitori.Count}";
+		}
+	}
+}
+
+<!-- Punti di prelievo -->
+<div>
+	<FluentButton @onclick="@RicercaPuntoDiPrelievoDialog" Appearance="Appearance.Accent">
+		Ricerca punto di prelievo
+	</FluentButton>
+</div>
+<div>
+	<FluentLabel Typo="Typography.Body">
+		@risultatoSelezionePuntoDiPrelievo
+	</FluentLabel>
+</div>
+
+@code {
+
+	string risultatoSelezionePuntoDiPrelievo;
+
+	PuntoDiPrelievo selezionePuntoDiPrelievo = new();
+
+	private async Task RicercaPuntoDiPrelievoDialog()
+	{
+		DialogParameters parametriDialog = new()
+			{
+				Title = "Selezione punto di prelievo",
+				DismissTitle = "Annulla",
+				Width = "60%"
+			};
+
+		IDialogReference dialog = await DialogService.ShowDialogAsync<SelezionePuntoDiPrelievo>(selezionePuntoDiPrelievo, parametriDialog);
+		DialogResult result = await dialog.Result;
+
+		if (result.Cancelled)
+		{
+			risultatoSelezionePuntoDiPrelievo = "Annullato";
+		}
+		else
+		{
+			risultatoSelezionePuntoDiPrelievo = "Codice: " + selezionePuntoDiPrelievo.Codice + " - Denominazione: " + selezionePuntoDiPrelievo.Denominazione;
+		}
+	}
+}
+
+
+<!-- Inserimento testo -->
+<div>
+	<FluentButton @onclick="@InserimentoTestoDialog" Appearance="Appearance.Accent">
+		Inserimento testo
+	</FluentButton>
+</div>
+<div>
+	<FluentLabel Typo="Typography.Body">
+		@risultatoInserimentoTesto
+	</FluentLabel>
+</div>
+
+@code {
+
+	InserimentoTestoContent inserimentoTestoContent = new()
+		{
+			Etichetta = "Inserisci un valore:",
+			//LunghezzaMassimaTesto = 10, // Opzionale
+			//ValoreInserito = "Valore iniziale", // Opzionale
+			Multilinea = true, // Opzionale predefinito: false
+			LarghezzaCasella = 100, // Opzionale
+			Obbligatorio = true // Predefinito: false
+		};
+	string risultatoInserimentoTesto;
+
+	private async Task InserimentoTestoDialog()
+	{
+		DialogParameters parametriDialog = new()
+			{
+				Title = "Inserimento dati",
+				DismissTitle = "Annulla"
+			};
+
+		IDialogReference dialog = await DialogService.ShowDialogAsync<InserimentoTesto>(inserimentoTestoContent, parametriDialog);
+		DialogResult result = await dialog.Result;
+
+		if (result.Cancelled)
+		{
+			risultatoInserimentoTesto = "Annullato";
+		}
+		else
+		{
+			risultatoInserimentoTesto = "Valore: " + inserimentoTestoContent.ValoreInserito;
+		}
+	}
+}
+
+<!-- Inserimento data ora -->
+<div>
+	<FluentButton @onclick="@InserimentoDataOraDialog" Appearance="Appearance.Accent">
+		Inserimento data ora
+	</FluentButton>
+</div>
+<div>
+	<FluentLabel Typo="Typography.Body">
+		@risultatoInserimentoDataOra
+	</FluentLabel>
+</div>
+
+@code {
+
+	InserimentoDataOraContent inserimentoDataOraContent = new()
+		{
+			Etichetta = "Inserisci un valore:",
+			VisualizzaData = true,
+			VisualizzaOra = true,
+			Obbligatorio = true, // Predefinito: false,
+			ValoreDataInserito = DateTime.Now.AddDays(2),
+			ValoreOraInserito = DateTime.Now.AddHours(3),
+		};
+	string risultatoInserimentoDataOra;
+
+	private async Task InserimentoDataOraDialog()
+	{
+		DialogParameters parametriDialog = new()
+			{
+				Title = "Inserimento dati",
+				DismissTitle = "Annulla",
+				SecondaryAction = "Annulla",
+				TrapFocus = true,
+				Modal = true,
+			};
+
+		IDialogReference dialog = await DialogService.ShowDialogAsync<InserimentoDataOra>(inserimentoDataOraContent, parametriDialog);
+		DialogResult result = await dialog.Result;
+
+		if (result.Cancelled)
+		{
+			risultatoInserimentoDataOra = "Annullato";
+		}
+		else
+		{
+			risultatoInserimentoDataOra = $"Data: {inserimentoDataOraContent.ValoreDataInserito} Ora: {inserimentoDataOraContent.ValoreOraInserito}";
+		}
+	}
+}
+
+<!-- Punto di prelievo -->
+<div>
+	<FluentButton @onclick="@PuntoDiPrelievoDialog" Appearance="Appearance.Accent">
+		Punto di prelievo
+	</FluentButton>
+</div>
+<div>
+	<FluentLabel Typo="Typography.Body">
+		@risultatoPuntoDiPrelievo
+	</FluentLabel>
+</div>
+
+@code {
+
+	// Il punto prelievo passato come argomento deve essere completo di comune e coordinate (anche se vuoti)
+	// Le proprieta del punto sono associate ai controlli del dialog tramite il binding
+	PuntoDiPrelievo puntoDiPrelievo = new()
+		{
+			Codice = "AR00000001",
+			Denominazione = "Punto di prelievo 1",
+			Indirizzo = "Via Roma 1",
+			Comune = new Comune()
+			{
+				CodiceIstat = "009006",
+				Denominazione = "Andora"
+			},
+			Coordinate = new Coordinate()
+			{
+				Latitudine = "43.123456",
+				Longitudine = "12.123456"
+			}
+		};
+	string risultatoPuntoDiPrelievo;
+
+	private async Task PuntoDiPrelievoDialog()
+	{
+		DialogParameters parametriDialog = new()
+			{
+				Title = "Punto di prelievo",
+				DismissTitle = "Annulla"
+			};
+
+		IDialogReference dialog = await DialogService.ShowDialogAsync<InserimentoModificaPuntoDiPrelievo>(puntoDiPrelievo, parametriDialog);
+		DialogResult result = await dialog.Result;
+
+		if (result.Cancelled)
+		{
+			risultatoPuntoDiPrelievo = "Annullato";
+		}
+		else
+		{
+			// Il punto di prelievo è stato modificato
+			risultatoPuntoDiPrelievo = $"Codice: {puntoDiPrelievo.Codice} Denominazione: {puntoDiPrelievo.Denominazione} - " +
+			$"Codice istat comune: {puntoDiPrelievo.Comune.CodiceIstat} Comune: {puntoDiPrelievo.Comune.Denominazione} - " +
+			$"Latitudine: {puntoDiPrelievo.Coordinate.Latitudine} Longitudine: {puntoDiPrelievo.Coordinate.Longitudine}";
+		}
+	}
+}
+
+<!-- Misure in loco -->
+<div>
+	<FluentButton @onclick="@MisureInLocoDialog" Appearance="Appearance.Accent">
+		Misure in loco
+	</FluentButton>
+</div>
+<div>
+	<FluentLabel Typo="Typography.Body">
+		@risultatoMisureInLoco
+	</FluentLabel>
+</div>
+
+@code {
+
+	List<MisuraInLoco> misurazioni = new()
+		{
+			new MisuraInLoco()
+			{
+				Codice = "M00001",
+				Descrizione = "Densità",
+				CodiceMetodo=  "C626",
+				DescrizioneMetodo= "Met. ISS CBC001 rev00",
+				UnitaMisura= null
+			},
+			new MisuraInLoco()
+			{
+				Codice = "M00002",
+				Descrizione = "Temperatura",
+				CodiceMetodo=  "C133",
+				DescrizioneMetodo= "Procedura come da DLG 123/34 art. 1 par 4.",
+				UnitaMisura= "Gradi Celsius"
+			},
+			new MisuraInLoco()
+			{
+				Codice = "M00003",
+				Descrizione = "Profondità",
+				CodiceMetodo=  "P42",
+				DescrizioneMetodo= "Metodologia standard",
+				UnitaMisura= "cm"
+			}
+		};
+	string risultatoMisureInLoco;
+
+	private async Task MisureInLocoDialog()
+	{
+		DialogParameters parametriDialog = new()
+			{
+				Title = "Misure in loco",
+				DismissTitle = "Annulla",
+				PrimaryAction = "Salva",
+				SecondaryAction = "Annulla",
+				Width = "80%"
+			};
+
+		IDialogReference dialog = await DialogService.ShowDialogAsync<ModificaMisureInLoco>(misurazioni, parametriDialog);
+		DialogResult result = await dialog.Result;
+
+		if (result.Cancelled)
+		{
+			risultatoMisureInLoco = "Annullato";
+		}
+		else
+		{
+			StringBuilder sb = new();
+			foreach (var misura in misurazioni)
+				sb.AppendLine($"Codice: {misura.Codice} Valore: {misura.Valore} Note: {misura.NoteOperatore} / ");
+
+			risultatoMisureInLoco = sb.ToString();
+		}
+	}
+}
+
+<!-- Prelevatori -->
+<div>
+	<FluentButton @onclick="@PrelevatoriDialog" Appearance="Appearance.Accent">
+		Prelevatori
+	</FluentButton>
+</div>
+<div>
+	<FluentLabel Typo="Typography.Body">
+		@risultatoPrelevatori
+	</FluentLabel>
+</div>
+
+@code {
+
+	List<Prelevatore> prelevatori = new()
+	{
+		new Prelevatore { Codice = "1", Nome = "Mario", Cognome ="Rossi" },
+		new Prelevatore { Codice = "2", Nome = "Luigi", Cognome ="Bianchi" }
+	};
+	List<Prelevatore> prelevatoriSelezionabili = new()
+	{
+		new Prelevatore { Codice = "3", Nome = "Paolo", Cognome ="Verdi" },
+		new Prelevatore { Codice = "4", Nome = "Maria", Cognome ="Gialli" },
+		new Prelevatore { Codice = "5", Nome = "Luisa" , Cognome ="Neri" }
+	};
+
+	string risultatoPrelevatori;
+
+	private async Task PrelevatoriDialog()
+	{
+		DialogParameters parametriDialog = new()
+			{
+				Title = "Prelevatori",
+				DismissTitle = "Annulla",
+				PrimaryAction = "Salva",
+				SecondaryAction = "Annulla"
+			};
+
+		ModificaPrelevatoriContent modificaPrelevatoriContent = new()
+			{
+				Prelevatori = prelevatori,
+				PrelevatoriSelezionabili = prelevatoriSelezionabili
+			};
+
+		IDialogReference dialog = await DialogService.ShowDialogAsync<ModificaPrelevatori>(modificaPrelevatoriContent, parametriDialog);
+		DialogResult result = await dialog.Result;
+
+		if (result.Cancelled)
+		{
+			risultatoPrelevatori = "Annullato";
+		}
+		else
+		{
+			StringBuilder sb = new("Prelevatori: ");
+			foreach (var prelevatore in modificaPrelevatoriContent.Prelevatori)
+				sb.AppendLine($"{prelevatore.Cognome} {prelevatore.Nome} / ");
+
+			risultatoPrelevatori = sb.ToString();
+		}
+	}
+}
+
+<!-- Conferma -->
+<div>
+	<FluentButton @onclick="@ConfermaDialog" Appearance="Appearance.Accent">
+		Conferma
+	</FluentButton>
+</div>
+<div>
+	<FluentLabel Typo="Typography.Body">
+		@risultatoConferma
+	</FluentLabel>
+</div>
+
+@code {
+
+
+	string risultatoConferma;
+
+	private async Task ConfermaDialog()
+	{
+		IDialogReference dialog = await DialogService
+		.ShowDialogAsync<Conferma>("Vuoi procedere con la distruzione del mondo?",
+			new()
+				{
+					DismissTitle = "Annulla"
+				});
+		DialogResult result = await dialog.Result;
+
+		if (result.Cancelled)
+		{
+			risultatoConferma = "Annullato";
+		}
+		else
+		{
+			risultatoConferma = "Ok";
+		}
+
+	}
+}

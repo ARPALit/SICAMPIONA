@@ -1,0 +1,187 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@using SICampiona.Shared
+@implements IDialogContentComponent<SelezioneAnalitaContent>
+@inject IAnagrafiche anagrafiche
+@inject IConfigurazioneOperatoreService infoOperatore
+
+<AvvisoErrore MessaggioErrore="@messaggioErrore"
+			  DettagliErrore="@dettagliErrore"
+			  VisualizzaComandoRicarica="@visualizzaComandoRicarica"
+			  VisualizzaComandoChiudi="@visualizzaComandoChiudi"
+			  VisualizzaComandoTornaHomePage=@visualizzaComandoTornaHomePage />
+
+<FluentStack VerticalAlignment="VerticalAlignment.Center">
+	<FluentTextField @bind-Value=parteDelNomeAnalita
+					 Label="Nome (obbligatorio, anche parziale, almeno due caratteri):"></FluentTextField>
+	<FluentSelect TOption="Pacchetto"
+				  Label="Pacchetto (opzionale):"
+				  Items="@pacchetti"
+				  Id="pacchetti-listbox"
+				  OptionValue="@(p => p.Codice)"
+				  OptionText="@(p => p.DescrizioneCodice)"
+				  @bind-Value="@codicePacchettoSelezionato"
+				  Height="200px"
+				  Width="500px" />
+	<FluentButton IconEnd="@(new Icons.Regular.Size24.Search())"
+				  OnClick="@Cerca" />
+</FluentStack>
+
+@if (@datiMancanti)
+{
+	<div style="color: red;">Specificare i parametri per la ricerca.</div>
+}
+
+<div style="height: 10px; padding-top: 5px;">
+	<FluentProgress Visible="@ricercaInCorso"></FluentProgress>
+</div>
+
+<div style="height: 400px; overflow-y: scroll;">
+	<FluentDataGrid Items="@analitiTrovati"
+					GridTemplateColumns="10% 15% 30% 20% 25%"
+					EmptyContent="nessunDatoFragment"
+					GenerateHeader="GenerateHeaderOption.Sticky"
+					Loading="@ricercaInCorso"
+					LoadingContent="ricercaInCorsoFragment">
+		<TemplateColumn Align="@Align.End">
+			<FluentButton IconEnd="@(new Icons.Regular.Size16.Checkmark())" OnClick="@(() => Seleziona(context))" />
+		</TemplateColumn>
+		<PropertyColumn Property="@(c => c.Codice)" Title="Codice" />
+		<PropertyColumn Property="@(c => c.Descrizione)" Title="Descrizione" Class="multiline-text" />
+		<PropertyColumn Property="@(c => c.CodiceMetodo + " - " + c.DescrizioneMetodo)" Title="Metodo" Class="multiline-text" />
+		<PropertyColumn Property="@(c => c.CodicePacchetto + " - " + c.DescrizionePacchetto)" Title="Pacchetto" Class="multiline-text" />
+	</FluentDataGrid>
+</div>
+
+<FluentDialogFooter>
+	<FluentButton Appearance="Appearance.Accent" OnClick="@Annulla">Annulla</FluentButton>
+</FluentDialogFooter>
+
+
+@code {
+
+	[Parameter]
+	public SelezioneAnalitaContent Content { get; set; } = default!;
+
+	[CascadingParameter]
+	public FluentDialog Dialog { get; set; }
+	private string nessunRisultato = "";
+	RenderFragment nessunDatoFragment => @<FluentLabel>@nessunRisultato</FluentLabel> ;
+	RenderFragment ricercaInCorsoFragment => @<FluentProgressRing></FluentProgressRing> ;
+
+	private bool ricercaInCorso = false;
+
+	private bool datiMancanti = false;
+
+	List<Pacchetto> pacchetti = new List<Pacchetto>();
+
+	private string codicePacchettoSelezionato;
+
+	private string parteDelNomeAnalita;
+
+	IQueryable<Analita> analitiTrovati;
+
+	#region Gestione errore
+	private string messaggioErrore = null;
+	private string dettagliErrore;
+	private bool visualizzaComandoRicarica = false;
+	private bool visualizzaComandoChiudi = false;
+	private bool visualizzaComandoTornaHomePage = false;
+	#endregion
+
+	protected override async Task OnInitializedAsync()
+	{
+		var resultPacchetti = await anagrafiche.Pacchetti(Content.CodiceMatrice, null);
+
+		if (resultPacchetti.IsSuccess)
+		{
+			pacchetti = resultPacchetti.Data.OrderBy(i => i.DescrizioneCodice).ToList();
+			// Aggiunta elemento vuoto per permettere di non selezionare nessun pacchetto
+			pacchetti.Insert(0, new Pacchetto { Codice = null, Descrizione = null });
+		}
+		else
+		{
+			messaggioErrore = "Non è stato possibile recuperare l'elenco dei pacchetti";
+			dettagliErrore = $"{resultPacchetti.ErrorMessage} - {resultPacchetti.ErrorDetails}";
+			visualizzaComandoRicarica = true;
+			visualizzaComandoChiudi = false;
+			visualizzaComandoTornaHomePage = true;
+		}
+
+		codicePacchettoSelezionato = pacchetti.FirstOrDefault()?.Codice;
+	}
+
+	private async Task Cerca()
+	{
+		datiMancanti = false;
+		// Se parte del nome dell'analita è minore di due caratteri, non esegue la ricerca
+		if (String.IsNullOrEmpty(parteDelNomeAnalita) || parteDelNomeAnalita?.Length < 2)
+		{
+			datiMancanti = true;
+			return;
+		}
+		ricercaInCorso = true;
+		// L'analita è cercato usando come linea "laboratorio"
+		var resultCerca = await anagrafiche.Analiti(Content.CodiceMatrice, codiceArgomento: null, codicePacchettoSelezionato, parteDelNomeAnalita, linea: "laboratorio");
+		nessunRisultato = "Nessun analita trovato";
+
+		if (resultCerca.IsSuccess)
+			analitiTrovati = resultCerca.Data.AsQueryable();
+		else
+		{
+			messaggioErrore = "Non è stato possibile eseguire la ricerca";
+			dettagliErrore = $"{resultCerca.ErrorMessage} - {resultCerca.ErrorDetails}";
+			visualizzaComandoRicarica = true;
+			visualizzaComandoChiudi = false;
+			visualizzaComandoTornaHomePage = true;
+		}
+		ricercaInCorso = false;
+	}
+
+	private async Task Seleziona(Analita analitaSelezionato)
+	{
+		Content.Analita.Codice = analitaSelezionato.Codice;
+		Content.Analita.Descrizione = analitaSelezionato.Descrizione;
+		Content.Analita.CodiceMetodo = analitaSelezionato.CodiceMetodo;
+		Content.Analita.DescrizioneMetodo = analitaSelezionato.DescrizioneMetodo;
+		Content.Analita.CodicePacchetto = analitaSelezionato.CodicePacchetto;
+		Content.Analita.DescrizionePacchetto = analitaSelezionato.DescrizionePacchetto;
+		Content.Analita.Ordinamento = analitaSelezionato.Ordinamento;
+
+		// Assegnazione dei contenitori dell'analita selezionato
+		var resultContenitori = await anagrafiche.Contenitori(analitaSelezionato.CodicePacchetto);
+		if (resultContenitori.IsSuccess)
+			Content.Analita.Contenitori = resultContenitori.Data;
+		else
+		{
+			messaggioErrore = "Non è stato possibile recuperare l'elenco dei contenitori associati all'analita";
+			dettagliErrore = $"{resultContenitori.ErrorMessage} - {resultContenitori.ErrorDetails}";
+			visualizzaComandoRicarica = true;
+			visualizzaComandoChiudi = false;
+			visualizzaComandoTornaHomePage = true;
+		}
+
+		await Dialog.CloseAsync();
+	}
+
+	private async Task Annulla()
+	{
+		await Dialog.CancelAsync();
+	}
+}

@@ -1,0 +1,137 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@page "/duplica"
+@using SICampiona.Shared
+
+@inject ICampionamentiStorage campionamentiStorage
+@inject NavigationManager Navigation
+@inject IDialogService DialogService
+@inject IAnagrafiche anagrafiche
+
+<FluentLabel Typo="Typography.PageTitle" Class="pagetitle">Duplica campionamento</FluentLabel>
+
+<AvvisoErrore MessaggioErrore="@messaggioErrore"
+			  DettagliErrore="@dettagliErrore"
+			  VisualizzaComandoRicarica="@visualizzaComandoRicarica"
+			  VisualizzaComandoTornaHomePage="@visualizzaComandoTornaHomePage"
+			  VisualizzaComandoChiudi="@visualizzaComandoChiudi" />
+
+<FluentStack Orientation="Orientation.Vertical">
+	<div style="padding: 5px; background-color:#fcfcfc; border: 1px solid #ccc; margin-bottom: 10px; min-width: 600px;">
+		<FluentStack VerticalAlignment="VerticalAlignment.Center">
+			<FluentLabel Weight="FontWeight.Bold">
+				Campionamento da duplicare:
+			</FluentLabel>
+			<FluentSelect TOption="InformazioniCampionamento"
+						  Items="@campionamenti"
+						  Id="campionamenti-listbox"
+						  Height="200px"
+						  OptionValue="@(p => p.IdCampionamento.ToString())"
+						  OptionText="@(p => p.PuntoDiPrelievo)"
+						  SelectedOptionChanged="@((InformazioniCampionamento campionamento) => SelezioneCampionamento(campionamento))" />
+		</FluentStack>
+
+		@if (campionamentoSelezionato != null)
+		{
+			<FluentStack>
+				<FluentLabel Weight="FontWeight.Bold">Cliente: </FluentLabel>
+				<FluentLabel>@campionamentoSelezionato.Cliente</FluentLabel>
+			</FluentStack>
+			<FluentStack>
+				<FluentLabel Weight="FontWeight.Bold">Matrice: </FluentLabel>
+				<FluentLabel>@campionamentoSelezionato.Matrice</FluentLabel>
+			</FluentStack>
+			<FluentStack>
+				<FluentLabel Weight="FontWeight.Bold">Argomento: </FluentLabel>
+				<FluentLabel>@campionamentoSelezionato.Argomento</FluentLabel>
+			</FluentStack>
+		}
+	</div>
+
+	<div style="padding: 5px; background-color:#fcfcfc; border: 1px solid #ccc; margin-bottom: 10px; min-width: 600px;">
+		<FluentStack>
+			<FluentLabel Weight="FontWeight.Bold">
+				Punto di prelievo:
+			</FluentLabel>
+		</FluentStack>
+		@if (puntoDiPrelievo != null)
+		{
+			<FluentStack>
+				<FluentLabel Weight="FontWeight.Bold">Denominazione: </FluentLabel>
+				<FluentLabel>@puntoDiPrelievo.Denominazione</FluentLabel>
+			</FluentStack>
+			<FluentStack>
+				<FluentLabel Weight="FontWeight.Bold">Indirizzo: </FluentLabel>
+				<FluentLabel>@puntoDiPrelievo.Indirizzo</FluentLabel>
+			</FluentStack>
+			<FluentStack>
+				<FluentLabel Weight="FontWeight.Bold">Codice: </FluentLabel>
+				<FluentLabel>@puntoDiPrelievo.Codice</FluentLabel>
+			</FluentStack>
+		}
+		<div>
+			<FluentButton IconEnd="@(new Icons.Regular.Size16.Search())"
+						  Appearance="Appearance.Outline"
+						  OnClick="@RicercaPuntoDiPrelievoDialog">
+				Ricerca
+			</FluentButton>
+			<FluentButton IconEnd="@(new Icons.Regular.Size16.Edit())"
+						  Appearance="Appearance.Outline"
+						  OnClick="@PuntoDiPrelievoDialog">
+				Inserimento
+			</FluentButton>
+		</div>
+
+	</div>
+
+	<div style="padding: 5px; background-color:#fcfcfc; border: 1px solid #ccc; margin-bottom: 10px; min-width: 600px;">
+		<FluentStack VerticalAlignment="VerticalAlignment.Center">
+			<FluentSelect TOption="string"
+						  Items="@tipiCampionamento"
+						  Id="tipocampionamento-listbox"
+						  OptionText="@(i => i)"
+						  OptionValue="@(i => i)"
+						  @bind-Value="@tipoCampionamentoSelezionato"
+						  Height="200px"
+						  LabelTemplate="EtichettaTipoCampionamentoFragment" />
+		</FluentStack>
+
+		<FluentStack>
+			@code {
+	RenderFragment EtichettaTipoCampionamentoFragment => @<FluentLabel Weight="FontWeight.Bold">Tipo campionamento:</FluentLabel> ;
+			}
+		</FluentStack>
+	</div>
+
+	<FluentStack>
+		<FluentCheckbox @bind-Value="@creaCollegamento" Label="Collega campionamento all'originale" />
+	</FluentStack>
+</FluentStack>
+
+
+<div class="floating-button-container">
+	<FluentStack VerticalAlignment="VerticalAlignment.Center">
+		<FluentButton Appearance="Appearance.Accent" OnClick="@Duplica" Loading="@creazioneInCorso" Disabled="@DuplicaDisabilitato">
+			Duplica
+		</FluentButton>
+		<FluentButton Appearance="Appearance.Accent" OnClick="@Annulla">
+			Annulla
+		</FluentButton>
+	</FluentStack>
+</div>

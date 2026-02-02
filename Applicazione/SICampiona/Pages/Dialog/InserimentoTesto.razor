@@ -1,0 +1,80 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@implements IDialogContentComponent<InserimentoTestoContent>
+
+@if (Content.Multilinea)
+{
+	<FluentTextArea Value=@Content.ValoreInserito
+					Label=@Content.Etichetta
+					Maxlength=@Content.LunghezzaMassimaTesto
+					Resize="TextAreaResize.Vertical"
+					ValueChanged=@ValoreModificato
+					Immediate="true"
+					style="width: 100%;">
+	</FluentTextArea>
+}
+else
+{
+	<FluentTextField Value=@Content.ValoreInserito
+					 Label=@Content.Etichetta
+					 Maxlength=@Content.LunghezzaMassimaTesto
+					 Size=@Content.LarghezzaCasella
+					 ValueChanged=@ValoreModificato
+					 Immediate="true">
+	</FluentTextField>
+}
+
+<FluentDialogFooter>
+	<FluentButton Appearance="Appearance.Accent" OnClick="@SaveAsync">Salva</FluentButton>
+	<FluentButton Appearance="Appearance.Accent" OnClick="@CancelAsync">Annulla</FluentButton>
+</FluentDialogFooter>
+@code {
+
+	[Parameter]
+	public InserimentoTestoContent Content { get; set; } = default!;
+
+	[CascadingParameter]
+	public FluentDialog Dialog { get; set; }
+
+	protected override void OnInitialized()
+	{
+		AbilitaConferma();
+	}
+
+	private void ValoreModificato(string valore)
+	{
+		Content.ValoreInserito = valore;
+		AbilitaConferma();
+	}
+
+	private void AbilitaConferma()
+	{
+		Dialog!.TogglePrimaryActionButton(!(string.IsNullOrWhiteSpace(Content.ValoreInserito) && Content.Obbligatorio));
+	}
+
+	private async Task SaveAsync()
+	{
+		await Dialog.CloseAsync(Content);
+	}
+
+	private async Task CancelAsync()
+	{
+		await Dialog.CancelAsync();
+	}
+}

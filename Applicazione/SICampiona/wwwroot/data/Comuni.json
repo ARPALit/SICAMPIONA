@@ -1,0 +1,946 @@
+[
+  {
+    "CodiceIstat": "008001",
+    "Denominazione": "Airole"
+  },
+  {
+    "CodiceIstat": "009001",
+    "Denominazione": "Alassio"
+  },
+  {
+    "CodiceIstat": "009002",
+    "Denominazione": "Albenga"
+  },
+  {
+    "CodiceIstat": "009004",
+    "Denominazione": "Albisola Superiore"
+  },
+  {
+    "CodiceIstat": "009003",
+    "Denominazione": "Albissola Marina"
+  },
+  {
+    "CodiceIstat": "009005",
+    "Denominazione": "Altare"
+  },
+  {
+    "CodiceIstat": "011001",
+    "Denominazione": "Ameglia"
+  },
+  {
+    "CodiceIstat": "009006",
+    "Denominazione": "Andora"
+  },
+  {
+    "CodiceIstat": "008002",
+    "Denominazione": "Apricale"
+  },
+  {
+    "CodiceIstat": "008003",
+    "Denominazione": "Aquila d'Arroscia"
+  },
+  {
+    "CodiceIstat": "011002",
+    "Denominazione": "Arcola"
+  },
+  {
+    "CodiceIstat": "010001",
+    "Denominazione": "Arenzano"
+  },
+  {
+    "CodiceIstat": "008004",
+    "Denominazione": "Armo"
+  },
+  {
+    "CodiceIstat": "009007",
+    "Denominazione": "Arnasco"
+  },
+  {
+    "CodiceIstat": "008005",
+    "Denominazione": "Aurigo"
+  },
+  {
+    "CodiceIstat": "010002",
+    "Denominazione": "Avegno"
+  },
+  {
+    "CodiceIstat": "008006",
+    "Denominazione": "Badalucco"
+  },
+  {
+    "CodiceIstat": "008007",
+    "Denominazione": "Bajardo"
+  },
+  {
+    "CodiceIstat": "009008",
+    "Denominazione": "Balestrino"
+  },
+  {
+    "CodiceIstat": "009009",
+    "Denominazione": "Bardineto"
+  },
+  {
+    "CodiceIstat": "010003",
+    "Denominazione": "Bargagli"
+  },
+  {
+    "CodiceIstat": "009010",
+    "Denominazione": "Bergeggi"
+  },
+  {
+    "CodiceIstat": "011003",
+    "Denominazione": "Beverino"
+  },
+  {
+    "CodiceIstat": "010004",
+    "Denominazione": "Bogliasco"
+  },
+  {
+    "CodiceIstat": "009011",
+    "Denominazione": "Boissano"
+  },
+  {
+    "CodiceIstat": "011004",
+    "Denominazione": "Bolano"
+  },
+  {
+    "CodiceIstat": "011005",
+    "Denominazione": "Bonassola"
+  },
+  {
+    "CodiceIstat": "008008",
+    "Denominazione": "Bordighera"
+  },
+  {
+    "CodiceIstat": "008009",
+    "Denominazione": "Borghetto d'Arroscia"
+  },
+  {
+    "CodiceIstat": "011006",
+    "Denominazione": "Borghetto di Vara"
+  },
+  {
+    "CodiceIstat": "009012",
+    "Denominazione": "Borghetto Santo Spirito"
+  },
+  {
+    "CodiceIstat": "009013",
+    "Denominazione": "Borgio Verezzi"
+  },
+  {
+    "CodiceIstat": "008010",
+    "Denominazione": "Borgomaro"
+  },
+  {
+    "CodiceIstat": "009014",
+    "Denominazione": "Bormida"
+  },
+  {
+    "CodiceIstat": "010005",
+    "Denominazione": "Borzonasca"
+  },
+  {
+    "CodiceIstat": "011007",
+    "Denominazione": "Brugnato"
+  },
+  {
+    "CodiceIstat": "010006",
+    "Denominazione": "Busalla"
+  },
+  {
+    "CodiceIstat": "009015",
+    "Denominazione": "Cairo Montenotte"
+  },
+  {
+    "CodiceIstat": "011008",
+    "Denominazione": "Calice al Cornoviglio"
+  },
+  {
+    "CodiceIstat": "009016",
+    "Denominazione": "Calice Ligure"
+  },
+  {
+    "CodiceIstat": "009017",
+    "Denominazione": "Calizzano"
+  },
+  {
+    "CodiceIstat": "010007",
+    "Denominazione": "Camogli"
+  },
+  {
+    "CodiceIstat": "010008",
+    "Denominazione": "Campo Ligure"
+  },
+  {
+    "CodiceIstat": "010009",
+    "Denominazione": "Campomorone"
+  },
+  {
+    "CodiceIstat": "008011",
+    "Denominazione": "Camporosso"
+  },
+  {
+    "CodiceIstat": "010010",
+    "Denominazione": "Carasco"
+  },
+  {
+    "CodiceIstat": "008012",
+    "Denominazione": "Caravonica"
+  },
+  {
+    "CodiceIstat": "009018",
+    "Denominazione": "Carcare"
+  },
+  {
+    "CodiceIstat": "008013",
+    "Denominazione": "Carpasio"
+  },
+  {
+    "CodiceIstat": "011009",
+    "Denominazione": "Carro"
+  },
+  {
+    "CodiceIstat": "011010",
+    "Denominazione": "Carrodano"
+  },
+  {
+    "CodiceIstat": "009019",
+    "Denominazione": "Casanova Lerrone"
+  },
+  {
+    "CodiceIstat": "010011",
+    "Denominazione": "Casarza Ligure"
+  },
+  {
+    "CodiceIstat": "010012",
+    "Denominazione": "Casella"
+  },
+  {
+    "CodiceIstat": "008015",
+    "Denominazione": "Castel Vittorio"
+  },
+  {
+    "CodiceIstat": "009020",
+    "Denominazione": "Castelbianco"
+  },
+  {
+    "CodiceIstat": "008014",
+    "Denominazione": "Castellaro"
+  },
+  {
+    "CodiceIstat": "011011",
+    "Denominazione": "Castelnuovo Magra"
+  },
+  {
+    "CodiceIstat": "009021",
+    "Denominazione": "Castelvecchio di Rocca Barbena"
+  },
+  {
+    "CodiceIstat": "010013",
+    "Denominazione": "Castiglione Chiavarese"
+  },
+  {
+    "CodiceIstat": "009022",
+    "Denominazione": "Celle Ligure"
+  },
+  {
+    "CodiceIstat": "009023",
+    "Denominazione": "Cengio"
+  },
+  {
+    "CodiceIstat": "010014",
+    "Denominazione": "Ceranesi"
+  },
+  {
+    "CodiceIstat": "009024",
+    "Denominazione": "Ceriale"
+  },
+  {
+    "CodiceIstat": "008016",
+    "Denominazione": "Ceriana"
+  },
+  {
+    "CodiceIstat": "008017",
+    "Denominazione": "Cervo"
+  },
+  {
+    "CodiceIstat": "008018",
+    "Denominazione": "Cesio"
+  },
+  {
+    "CodiceIstat": "010015",
+    "Denominazione": "Chiavari"
+  },
+  {
+    "CodiceIstat": "008019",
+    "Denominazione": "Chiusanico"
+  },
+  {
+    "CodiceIstat": "008020",
+    "Denominazione": "Chiusavecchia"
+  },
+  {
+    "CodiceIstat": "010016",
+    "Denominazione": "Cicagna"
+  },
+  {
+    "CodiceIstat": "008021",
+    "Denominazione": "Cipressa"
+  },
+  {
+    "CodiceIstat": "009025",
+    "Denominazione": "Cisano sul Neva"
+  },
+  {
+    "CodiceIstat": "008022",
+    "Denominazione": "Civezza"
+  },
+  {
+    "CodiceIstat": "010017",
+    "Denominazione": "Cogoleto"
+  },
+  {
+    "CodiceIstat": "010018",
+    "Denominazione": "Cogorno"
+  },
+  {
+    "CodiceIstat": "010019",
+    "Denominazione": "Coreglia Ligure"
+  },
+  {
+    "CodiceIstat": "008023",
+    "Denominazione": "Cosio d'Arroscia"
+  },
+  {
+    "CodiceIstat": "009026",
+    "Denominazione": "Cosseria"
+  },
+  {
+    "CodiceIstat": "008024",
+    "Denominazione": "Costarainera"
+  },
+  {
+    "CodiceIstat": "010020",
+    "Denominazione": "Crocefieschi"
+  },
+  {
+    "CodiceIstat": "010021",
+    "Denominazione": "Davagna"
+  },
+  {
+    "CodiceIstat": "009027",
+    "Denominazione": "Dego"
+  },
+  {
+    "CodiceIstat": "011012",
+    "Denominazione": "Deiva Marina"
+  },
+  {
+    "CodiceIstat": "008025",
+    "Denominazione": "Diano Arentino"
+  },
+  {
+    "CodiceIstat": "008026",
+    "Denominazione": "Diano Castello"
+  },
+  {
+    "CodiceIstat": "008027",
+    "Denominazione": "Diano Marina"
+  },
+  {
+    "CodiceIstat": "008028",
+    "Denominazione": "Diano San Pietro"
+  },
+  {
+    "CodiceIstat": "008029",
+    "Denominazione": "Dolceacqua"
+  },
+  {
+    "CodiceIstat": "008030",
+    "Denominazione": "Dolcedo"
+  },
+  {
+    "CodiceIstat": "009028",
+    "Denominazione": "Erli"
+  },
+  {
+    "CodiceIstat": "010022",
+    "Denominazione": "Fascia"
+  },
+  {
+    "CodiceIstat": "010023",
+    "Denominazione": "Favale di Malvaro"
+  },
+  {
+    "CodiceIstat": "009029",
+    "Denominazione": "Finale Ligure"
+  },
+  {
+    "CodiceIstat": "011013",
+    "Denominazione": "Follo"
+  },
+  {
+    "CodiceIstat": "010024",
+    "Denominazione": "Fontanigorda"
+  },
+  {
+    "CodiceIstat": "011014",
+    "Denominazione": "Framura"
+  },
+  {
+    "CodiceIstat": "009030",
+    "Denominazione": "Garlenda"
+  },
+  {
+    "CodiceIstat": "010025",
+    "Denominazione": "Genova"
+  },
+  {
+    "CodiceIstat": "009031",
+    "Denominazione": "Giustenice"
+  },
+  {
+    "CodiceIstat": "009032",
+    "Denominazione": "Giusvalla"
+  },
+  {
+    "CodiceIstat": "010026",
+    "Denominazione": "Gorreto"
+  },
+  {
+    "CodiceIstat": "008031",
+    "Denominazione": "Imperia"
+  },
+  {
+    "CodiceIstat": "010027",
+    "Denominazione": "Isola del Cantone"
+  },
+  {
+    "CodiceIstat": "008032",
+    "Denominazione": "Isolabona"
+  },
+  {
+    "CodiceIstat": "011015",
+    "Denominazione": "La Spezia"
+  },
+  {
+    "CodiceIstat": "009033",
+    "Denominazione": "Laigueglia"
+  },
+  {
+    "CodiceIstat": "010028",
+    "Denominazione": "Lavagna"
+  },
+  {
+    "CodiceIstat": "010029",
+    "Denominazione": "Leivi"
+  },
+  {
+    "CodiceIstat": "011016",
+    "Denominazione": "Lerici"
+  },
+  {
+    "CodiceIstat": "011017",
+    "Denominazione": "Levanto"
+  },
+  {
+    "CodiceIstat": "009034",
+    "Denominazione": "Loano"
+  },
+  {
+    "CodiceIstat": "010030",
+    "Denominazione": "Lorsica"
+  },
+  {
+    "CodiceIstat": "008033",
+    "Denominazione": "Lucinasco"
+  },
+  {
+    "CodiceIstat": "010031",
+    "Denominazione": "Lumarzo"
+  },
+  {
+    "CodiceIstat": "009035",
+    "Denominazione": "Magliolo"
+  },
+  {
+    "CodiceIstat": "011018",
+    "Denominazione": "Maissana"
+  },
+  {
+    "CodiceIstat": "009036",
+    "Denominazione": "Mallare"
+  },
+  {
+    "CodiceIstat": "010032",
+    "Denominazione": "Masone"
+  },
+  {
+    "CodiceIstat": "009037",
+    "Denominazione": "Massimino"
+  },
+  {
+    "CodiceIstat": "010033",
+    "Denominazione": "Mele"
+  },
+  {
+    "CodiceIstat": "008034",
+    "Denominazione": "Mendatica"
+  },
+  {
+    "CodiceIstat": "010034",
+    "Denominazione": "Mezzanego"
+  },
+  {
+    "CodiceIstat": "010035",
+    "Denominazione": "Mignanego"
+  },
+  {
+    "CodiceIstat": "009038",
+    "Denominazione": "Millesimo"
+  },
+  {
+    "CodiceIstat": "009039",
+    "Denominazione": "Mioglia"
+  },
+  {
+    "CodiceIstat": "010036",
+    "Denominazione": "Moconesi"
+  },
+  {
+    "CodiceIstat": "008035",
+    "Denominazione": "Molini di Triora"
+  },
+  {
+    "CodiceIstat": "010037",
+    "Denominazione": "Moneglia"
+  },
+  {
+    "CodiceIstat": "008068",
+    "Denominazione": "Montalto Carpasio"
+  },  
+  {
+    "CodiceIstat": "008036",
+    "Denominazione": "Montalto Ligure"
+  },
+  {
+    "CodiceIstat": "010038",
+    "Denominazione": "Montebruno"
+  },
+  {
+    "CodiceIstat": "008037",
+    "Denominazione": "Montegrosso Pian Latte"
+  },
+  {
+    "CodiceIstat": "011019",
+    "Denominazione": "Monterosso al Mare"
+  },
+  {
+    "CodiceIstat": "010039",
+    "Denominazione": "Montoggio"
+  },
+  {
+    "CodiceIstat": "009040",
+    "Denominazione": "Murialdo"
+  },
+  {
+    "CodiceIstat": "009041",
+    "Denominazione": "Nasino"
+  },
+  {
+    "CodiceIstat": "010040",
+    "Denominazione": "Ne"
+  },
+  {
+    "CodiceIstat": "010041",
+    "Denominazione": "Neirone"
+  },
+  {
+    "CodiceIstat": "009042",
+    "Denominazione": "Noli"
+  },
+  {
+    "CodiceIstat": "008038",
+    "Denominazione": "Olivetta San Michele"
+  },
+  {
+    "CodiceIstat": "009043",
+    "Denominazione": "Onzo"
+  },
+  {
+    "CodiceIstat": "009044",
+    "Denominazione": "Orco Feglino"
+  },
+  {
+    "CodiceIstat": "010042",
+    "Denominazione": "Orero"
+  },
+  {
+    "CodiceIstat": "011020",
+    "Denominazione": "Ortonovo"
+  },
+  {
+    "CodiceIstat": "009045",
+    "Denominazione": "Ortovero"
+  },
+  {
+    "CodiceIstat": "009046",
+    "Denominazione": "Osiglia"
+  },
+  {
+    "CodiceIstat": "008039",
+    "Denominazione": "Ospedaletti"
+  },
+  {
+    "CodiceIstat": "009047",
+    "Denominazione": "Pallare"
+  },
+  {
+    "CodiceIstat": "008040",
+    "Denominazione": "Perinaldo"
+  },
+  {
+    "CodiceIstat": "009048",
+    "Denominazione": "Piana Crixia"
+  },
+  {
+    "CodiceIstat": "009049",
+    "Denominazione": "Pietra Ligure"
+  },
+  {
+    "CodiceIstat": "008041",
+    "Denominazione": "Pietrabruna"
+  },
+  {
+    "CodiceIstat": "008042",
+    "Denominazione": "Pieve di Teco"
+  },
+  {
+    "CodiceIstat": "010043",
+    "Denominazione": "Pieve Ligure"
+  },
+  {
+    "CodiceIstat": "008043",
+    "Denominazione": "Pigna"
+  },
+  {
+    "CodiceIstat": "011021",
+    "Denominazione": "Pignone"
+  },
+  {
+    "CodiceIstat": "009050",
+    "Denominazione": "Plodio"
+  },
+  {
+    "CodiceIstat": "008044",
+    "Denominazione": "Pompeiana"
+  },
+  {
+    "CodiceIstat": "008045",
+    "Denominazione": "Pontedassio"
+  },
+  {
+    "CodiceIstat": "009051",
+    "Denominazione": "Pontinvrea"
+  },
+  {
+    "CodiceIstat": "008046",
+    "Denominazione": "Pornassio"
+  },
+  {
+    "CodiceIstat": "010044",
+    "Denominazione": "Portofino"
+  },
+  {
+    "CodiceIstat": "011022",
+    "Denominazione": "Portovenere"
+  },
+  {
+    "CodiceIstat": "008047",
+    "Denominazione": "Prelà"
+  },
+  {
+    "CodiceIstat": "010045",
+    "Denominazione": "Propata"
+  },
+  {
+    "CodiceIstat": "009052",
+    "Denominazione": "Quiliano"
+  },
+  {
+    "CodiceIstat": "008048",
+    "Denominazione": "Ranzo"
+  },
+  {
+    "CodiceIstat": "010046",
+    "Denominazione": "Rapallo"
+  },
+  {
+    "CodiceIstat": "010047",
+    "Denominazione": "Recco"
+  },
+  {
+    "CodiceIstat": "008049",
+    "Denominazione": "Rezzo"
+  },
+  {
+    "CodiceIstat": "010048",
+    "Denominazione": "Rezzoaglio"
+  },
+  {
+    "CodiceIstat": "009053",
+    "Denominazione": "Rialto"
+  },
+  {
+    "CodiceIstat": "011023",
+    "Denominazione": "Riccò del Golfo di Spezia"
+  },
+  {
+    "CodiceIstat": "011024",
+    "Denominazione": "Riomaggiore"
+  },
+  {
+    "CodiceIstat": "008050",
+    "Denominazione": "Riva Ligure"
+  },
+  {
+    "CodiceIstat": "009054",
+    "Denominazione": "Roccavignale"
+  },
+  {
+    "CodiceIstat": "011025",
+    "Denominazione": "Rocchetta di Vara"
+  },
+  {
+    "CodiceIstat": "008051",
+    "Denominazione": "Rocchetta Nervina"
+  },
+  {
+    "CodiceIstat": "010049",
+    "Denominazione": "Ronco Scrivia"
+  },
+  {
+    "CodiceIstat": "010050",
+    "Denominazione": "Rondanina"
+  },
+  {
+    "CodiceIstat": "010051",
+    "Denominazione": "Rossiglione"
+  },
+  {
+    "CodiceIstat": "010052",
+    "Denominazione": "Rovegno"
+  },
+  {
+    "CodiceIstat": "008052",
+    "Denominazione": "San Bartolomeo al Mare"
+  },
+  {
+    "CodiceIstat": "008053",
+    "Denominazione": "San Biagio della Cima"
+  },
+  {
+    "CodiceIstat": "010053",
+    "Denominazione": "San Colombano Certenoli"
+  },
+  {
+    "CodiceIstat": "008054",
+    "Denominazione": "San Lorenzo al Mare"
+  },
+  {
+    "CodiceIstat": "008055",
+    "Denominazione": "Sanremo"
+  },
+  {
+    "CodiceIstat": "010054",
+    "Denominazione": "Santa Margherita Ligure"
+  },
+  {
+    "CodiceIstat": "008056",
+    "Denominazione": "Santo Stefano al Mare"
+  },
+  {
+    "CodiceIstat": "010056",
+    "Denominazione": "Santo Stefano d'Aveto"
+  },
+  {
+    "CodiceIstat": "011026",
+    "Denominazione": "Santo Stefano di Magra"
+  },
+  {
+    "CodiceIstat": "010055",
+    "Denominazione": "Sant'Olcese"
+  },
+  {
+    "CodiceIstat": "011027",
+    "Denominazione": "Sarzana"
+  },
+  {
+    "CodiceIstat": "009055",
+    "Denominazione": "Sassello"
+  },
+  {
+    "CodiceIstat": "010057",
+    "Denominazione": "Savignone"
+  },
+  {
+    "CodiceIstat": "009056",
+    "Denominazione": "Savona"
+  },
+  {
+    "CodiceIstat": "008057",
+    "Denominazione": "Seborga"
+  },
+  {
+    "CodiceIstat": "010058",
+    "Denominazione": "Serra Riccò"
+  },
+  {
+    "CodiceIstat": "011028",
+    "Denominazione": "Sesta Godano"
+  },
+  {
+    "CodiceIstat": "010059",
+    "Denominazione": "Sestri Levante"
+  },
+  {
+    "CodiceIstat": "008058",
+    "Denominazione": "Soldano"
+  },
+  {
+    "CodiceIstat": "010060",
+    "Denominazione": "Sori"
+  },
+  {
+    "CodiceIstat": "009057",
+    "Denominazione": "Spotorno"
+  },
+  {
+    "CodiceIstat": "009058",
+    "Denominazione": "Stella"
+  },
+  {
+    "CodiceIstat": "009059",
+    "Denominazione": "Stellanello"
+  },
+  {
+    "CodiceIstat": "008059",
+    "Denominazione": "Taggia"
+  },
+  {
+    "CodiceIstat": "008060",
+    "Denominazione": "Terzorio"
+  },
+  {
+    "CodiceIstat": "009060",
+    "Denominazione": "Testico"
+  },
+  {
+    "CodiceIstat": "010061",
+    "Denominazione": "Tiglieto"
+  },
+  {
+    "CodiceIstat": "009061",
+    "Denominazione": "Toirano"
+  },
+  {
+    "CodiceIstat": "010062",
+    "Denominazione": "Torriglia"
+  },
+  {
+    "CodiceIstat": "009062",
+    "Denominazione": "Tovo San Giacomo"
+  },
+  {
+    "CodiceIstat": "010063",
+    "Denominazione": "Tribogna"
+  },
+  {
+    "CodiceIstat": "008061",
+    "Denominazione": "Triora"
+  },
+  {
+    "CodiceIstat": "009063",
+    "Denominazione": "Urbe"
+  },
+  {
+    "CodiceIstat": "010064",
+    "Denominazione": "Uscio"
+  },
+  {
+    "CodiceIstat": "009064",
+    "Denominazione": "Vado Ligure"
+  },
+  {
+    "CodiceIstat": "010065",
+    "Denominazione": "Valbrevenna"
+  },
+  {
+    "CodiceIstat": "008062",
+    "Denominazione": "Vallebona"
+  },
+  {
+    "CodiceIstat": "008063",
+    "Denominazione": "Vallecrosia"
+  },
+  {
+    "CodiceIstat": "009065",
+    "Denominazione": "Varazze"
+  },
+  {
+    "CodiceIstat": "011029",
+    "Denominazione": "Varese Ligure"
+  },
+  {
+    "CodiceIstat": "008064",
+    "Denominazione": "Vasia"
+  },
+  {
+    "CodiceIstat": "009066",
+    "Denominazione": "Vendone"
+  },
+  {
+    "CodiceIstat": "008065",
+    "Denominazione": "Ventimiglia"
+  },
+  {
+    "CodiceIstat": "011030",
+    "Denominazione": "Vernazza"
+  },
+  {
+    "CodiceIstat": "008066",
+    "Denominazione": "Vessalico"
+  },
+  {
+    "CodiceIstat": "011031",
+    "Denominazione": "Vezzano Ligure"
+  },
+  {
+    "CodiceIstat": "009067",
+    "Denominazione": "Vezzi Portio"
+  },
+  {
+    "CodiceIstat": "008067",
+    "Denominazione": "Villa Faraldi"
+  },
+  {
+    "CodiceIstat": "009068",
+    "Denominazione": "Villanova d'Albenga"
+  },
+  {
+    "CodiceIstat": "010066",
+    "Denominazione": "Vobbia"
+  },
+  {
+    "CodiceIstat": "011032",
+    "Denominazione": "Zignago"
+  },
+  {
+    "CodiceIstat": "010067",
+    "Denominazione": "Zoagli"
+  },
+  {
+    "CodiceIstat": "009069",
+    "Denominazione": "Zuccarello"
+  }
+]

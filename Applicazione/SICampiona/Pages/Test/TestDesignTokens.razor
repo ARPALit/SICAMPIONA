@@ -1,0 +1,88 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@page "/testdesigntokens"
+@using Microsoft.FluentUI.AspNetCore.Components.DesignTokens
+
+<h3>Test design tokens</h3>
+
+<FluentButton @ref="ref1" Appearance="Appearance.Neutral">A button</FluentButton>
+<FluentButton @ref="ref2" Appearance="Appearance.Accent">Another button</FluentButton>
+<FluentButton @ref="ref3" Appearance="Appearance.Accent">And one more</FluentButton>
+<FluentButton @ref="ref4" Appearance="Appearance.Accent" @onclick=OnClick>Last button</FluentButton>
+
+<NavLink class="nav-link" href="./">
+	Elenco attività
+</NavLink>
+
+@code {
+	[Inject]
+	private BaseLayerLuminance BaseLayerLuminance { get; set; } = default!;
+
+	[Inject]
+	private AccentBaseColor AccentBaseColor { get; set; } = default!;
+
+	[Inject]
+	private BodyFont BodyFont { get; set; } = default!;
+
+	[Inject]
+	private StrokeWidth StrokeWidth { get; set; } = default!;
+
+	[Inject]
+	private ControlCornerRadius ControlCornerRadius { get; set; } = default!;
+
+	FluentButton ref1;
+	FluentButton ref2;
+	FluentButton ref3;
+	FluentButton ref4;
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			//Set to dark mode
+			await BaseLayerLuminance.SetValueFor(ref1!.Element, (float)0.15);
+
+			//Set to Excel color
+			//await AccentBaseColor.SetValueFor(ref2!.Element, "#185ABD".ToSwatch());
+			await AccentBaseColor.WithDefault("#CE0FB5".ToSwatch());
+
+			//Set the font
+			//await BodyFont.SetValueFor(ref3!.Element, "Comic Sans MS");
+
+			//Set 'border' width for ref4
+			//await StrokeWidth.SetValueFor(ref4!.Element, 7);
+
+			//And change conrner radius as well
+			//await ControlCornerRadius.SetValueFor(ref4!.Element, 15);
+
+			// If you would like to change the BaseLayerLuminance  value for the whole site, you can use the WithDefault method
+			//await BaseLayerLuminance.WithDefault((float)0.15);
+			
+			
+			StateHasChanged();
+		}
+
+	}
+
+	public async Task OnClick()
+	{
+		//Remove the wide border
+		await StrokeWidth.DeleteValueFor(ref4!.Element);
+	}
+}

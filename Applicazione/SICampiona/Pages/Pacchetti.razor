@@ -1,0 +1,241 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@page "/pacchetti"
+@using SICampiona.Shared
+
+@inject NavigationManager Navigation
+@inject IAnagrafiche anagrafiche
+
+<FluentLabel Typo="Typography.PageTitle" Class="pagetitle">Pacchetti ALIMS</FluentLabel>
+
+<AvvisoErrore MessaggioErrore="@messaggioErrore"
+			  DettagliErrore="@dettagliErrore"
+			  VisualizzaComandoRicarica="@visualizzaComandoRicarica"
+			  VisualizzaComandoChiudi="@visualizzaComandoChiudi"
+			  VisualizzaComandoTornaHomePage="@visualizzaComandoTornaHomePage" />
+
+<FluentStack VerticalAlignment="VerticalAlignment.Center">
+	<FluentSelect TOption="MatriceNomeDescrizione"
+				  Label="Matrice:"
+				  Items="@matrici"
+				  Id="matrici-listbox"
+				  OptionValue="@(p => p.Codice)"
+				  OptionText="@(p => p.Nome)"
+				  @bind-Value="@codiceMatriceSelezionata"
+				  Height="200px"
+				  SelectedOptionChanged="@(() => PopolaElencoPacchetti())" />
+	<FluentSelect TOption="SedeAccettazione"
+				  Label="Sede accettazione:"
+				  Items="@sediAccettazione"
+				  Id="sediaccettazione-listbox"
+				  OptionValue="@(p => p.Codice)"
+				  OptionText="@(p => p.Denominazione)"
+				  @bind-Value="@codiceSedeAccettazioneSelezionata"
+				  Height="200px"
+				  SelectedOptionChanged="@(() => PopolaElencoPacchetti())" />
+	<FluentSelect TOption="Pacchetto"
+				  Label="Pacchetto:"
+				  Items="@pacchetti"
+				  Id="pacchetti-listbox"
+				  OptionValue="@(p => p.Codice)"
+				  OptionText="@(p => p.DescrizioneCodice)"
+				  @bind-Value="@codicePacchettoSelezionato"
+				  Height="200px"
+				  SelectedOptionChanged="@(() => Cerca())" />
+</FluentStack>
+
+<div style="height: 5px; padding-top: 2px;">
+	<FluentProgress Visible="@popolamentoDropdownInCorso"></FluentProgress>
+</div>
+
+<FluentLabel Typo="Typography.H3" Class="pagetitle">Analiti</FluentLabel>
+<FluentDataGrid Items="@analitiTrovati"
+				GridTemplateColumns="10% 20% 70%"
+				EmptyContent="nessunRisultatoAnalitiFragment"
+				GenerateHeader="GenerateHeaderOption.Sticky"
+				Loading="@ricercaInCorso"
+				LoadingContent="ricercaInCorsoFragment">
+	<PropertyColumn Property="@(c => c.Codice)" Title="Codice" />
+	<PropertyColumn Property="@(c => c.Descrizione)" Title="Descrizione" Class="multiline-text" />
+	<PropertyColumn Property="@(c => c.CodiceMetodo + " - " + c.DescrizioneMetodo)" Title="Metodo" Class="multiline-text" />
+</FluentDataGrid>
+
+<FluentLabel Typo="Typography.H3" Class="pagetitle">Contenitori</FluentLabel>
+<FluentDataGrid Items="@contenitoriTrovati"
+				GridTemplateColumns="30% 10%"
+				EmptyContent="nessunRisultatoContenitoriFragment"
+				GenerateHeader="GenerateHeaderOption.Sticky"
+				Loading="@ricercaInCorso"
+				LoadingContent="ricercaInCorsoFragment">
+	<PropertyColumn Property="@(c => c.Tipo)" Title="Tipo" />
+	<PropertyColumn Property="@(c => c.Quantita)" Title="Quantità"/>
+</FluentDataGrid>
+
+
+<div class="floating-button-container">
+	<FluentStack>
+		<FluentButton Appearance="Appearance.Accent" OnClick="@Chiudi">Chiudi</FluentButton>
+	</FluentStack>
+</div>
+
+@code {
+
+	#region Gestione errore
+	private string messaggioErrore = null;
+	private string dettagliErrore;
+	private bool visualizzaComandoRicarica = false;
+	private bool visualizzaComandoChiudi = false;
+	private bool visualizzaComandoTornaHomePage = false;
+	#endregion
+
+	List<MatriceNomeDescrizione> matrici = new List<MatriceNomeDescrizione>();
+	string codiceMatriceSelezionata = null;
+
+	List<SedeAccettazione> sediAccettazione = new List<SedeAccettazione>();
+	string codiceSedeAccettazioneSelezionata = null;
+
+	List<Pacchetto> pacchetti = new List<Pacchetto>();
+	string codicePacchettoSelezionato = null;
+
+	private bool popolamentoDropdownInCorso = false;
+	private bool ricercaInCorso = false;
+
+	RenderFragment ricercaInCorsoFragment => @<FluentProgressRing></FluentProgressRing>;
+
+	RenderFragment nessunRisultatoAnalitiFragment => @<FluentLabel>Nessun analita trovato per il pacchetto</FluentLabel>;	
+	IQueryable<Analita> analitiTrovati;
+
+	RenderFragment nessunRisultatoContenitoriFragment => @<FluentLabel>Nessun contenitore trovato per il pacchetto</FluentLabel>;
+	IQueryable<Contenitore> contenitoriTrovati;
+
+	protected override async Task OnInitializedAsync()
+	{
+		await PopolaElencoMatrici();
+		await PopolaElencoSediAccettazione();
+		await Cerca();
+	}
+
+	private async Task PopolaElencoMatrici()
+	{
+		popolamentoDropdownInCorso = true;
+		var result = await anagrafiche.Matrici();
+		if (result.IsSuccess)
+		{
+			matrici = result.Data;
+			codiceMatriceSelezionata = matrici.FirstOrDefault()?.Codice;
+		}
+		else
+		{
+			messaggioErrore = "Non è stato possibile recuperare l'elenco delle matrici";
+			dettagliErrore = $"{result.ErrorMessage} - {result.ErrorDetails}";
+			visualizzaComandoRicarica = true;
+			visualizzaComandoChiudi = false;
+			visualizzaComandoTornaHomePage = true;
+		}
+		popolamentoDropdownInCorso = false;
+	}
+
+	private async Task PopolaElencoSediAccettazione()
+	{
+		var result = await anagrafiche.SediAccettazione();
+		if (result.IsSuccess)
+		{
+			sediAccettazione = result.Data;
+			sediAccettazione.Insert(0, new SedeAccettazione { Codice = null, Denominazione = string.Empty });
+			StateHasChanged();
+			codiceSedeAccettazioneSelezionata = null;
+		}
+		else
+		{
+			messaggioErrore = "Non è stato possibile recuperare l'elenco delle sedi di accettazione";
+			dettagliErrore = $"{result.ErrorMessage} - {result.ErrorDetails}";
+			visualizzaComandoRicarica = true;
+			visualizzaComandoChiudi = false;
+			visualizzaComandoTornaHomePage = true;
+		}
+	}
+
+	private async Task PopolaElencoPacchetti()
+	{
+		popolamentoDropdownInCorso = true;
+		var result = await anagrafiche.Pacchetti(codiceMatriceSelezionata, null, codiceSedeAccettazioneSelezionata);
+		if (result.IsSuccess)
+		{
+			pacchetti = result.Data;
+			codicePacchettoSelezionato = pacchetti.FirstOrDefault()?.Codice;
+		}
+		else
+		{
+			messaggioErrore = "Non è stato possibile recuperare l'elenco dei pacchetti";
+			dettagliErrore = $"{result.ErrorMessage} - {result.ErrorDetails}";
+			visualizzaComandoRicarica = true;
+			visualizzaComandoChiudi = false;
+			visualizzaComandoTornaHomePage = true;
+		}
+		popolamentoDropdownInCorso = false;
+	}
+
+	private async Task Cerca()
+	{
+		ricercaInCorso = true;
+		await CercaAnaliti();
+		await CercaContenitori();
+		ricercaInCorso = false;
+	}
+
+	private async Task CercaAnaliti()
+	{
+		var resultCerca = await anagrafiche.Analiti(codiceMatriceSelezionata, null, codicePacchettoSelezionato);
+
+		if (resultCerca.IsSuccess)
+			analitiTrovati = resultCerca.Data.AsQueryable();
+		else
+		{
+			messaggioErrore = "Non è stato possibile eseguire la ricerca";
+			dettagliErrore = $"{resultCerca.ErrorMessage} - {resultCerca.ErrorDetails}";
+			visualizzaComandoRicarica = true;
+			visualizzaComandoChiudi = false;
+			visualizzaComandoTornaHomePage = true;
+		}
+	}
+
+	private async Task CercaContenitori()
+	{
+		if(codicePacchettoSelezionato == null)
+			return;
+
+		var resultContenitori = await anagrafiche.Contenitori(codicePacchettoSelezionato);
+
+		if (resultContenitori.IsSuccess)
+			contenitoriTrovati = resultContenitori.Data.AsQueryable();
+		else
+		{
+			messaggioErrore = "Non è stato possibile recuperare l'elenco dei contenitori";
+			dettagliErrore = $"{resultContenitori.ErrorMessage} - {resultContenitori.ErrorDetails}";
+			visualizzaComandoRicarica = true;
+			visualizzaComandoChiudi = false;
+			visualizzaComandoTornaHomePage = true;
+		}
+	}
+
+	private void Chiudi()
+	{
+		Navigation.NavigateTo("./");
+	}
+}

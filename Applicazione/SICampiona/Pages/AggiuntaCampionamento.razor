@@ -1,0 +1,203 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@page "/nuovo"
+@using SICampiona.Pages.Dialog
+@using SICampiona.Pages.Visualizzazione
+@using SICampiona.Shared
+
+@inject ICampionamentiStorage campionamentiStorage
+@inject NavigationManager Navigation
+@inject IAnagrafiche anagrafiche
+@inject IDialogService DialogService
+@inject IConfigurazioneOperatoreService infoOperatore
+
+<FluentLabel Typo="Typography.PageTitle" Class="pagetitle">Nuovo campionamento</FluentLabel>
+
+<AvvisoErrore MessaggioErrore="@messaggioErrore"
+			  DettagliErrore="@dettagliErrore"
+			  VisualizzaComandoRicarica="@visualizzaComandoRicarica"
+			  VisualizzaComandoTornaHomePage="@visualizzaComandoTornaHomePage"
+			  VisualizzaComandoChiudi="@visualizzaComandoChiudi" />
+
+<FluentGrid Style="padding-bottom:10px">
+	<FluentGridItem sm="12" md="6">
+		<FluentSelect TOption="ConfigurazioneOperatore.Ente"
+					  Items="@enti"
+					  Id="enti-listbox"
+					  OptionValue="@(p => p.Codice)"
+					  OptionText="@(p => p.RagioneSociale)"
+					  @bind-Value="@codiceEnteSelezionato"
+					  SelectedOptionChanged="@((ConfigurazioneOperatore.Ente ente) => SelezioneEnte(ente))"
+					  Height="200px"
+					  LabelTemplate="EtichettaEnteFragment" />
+	</FluentGridItem>
+	@code {
+			RenderFragment EtichettaEnteFragment => @<FluentLabel Weight="FontWeight.Bold">Ente:</FluentLabel> ;
+	}
+
+	<FluentGridItem sm="12" md="6">
+		<FluentLabel Weight="FontWeight.Bold">
+			Cliente:
+		</FluentLabel>
+		<FluentLabel>
+			@datiCliente.Denominazione @datiCliente.Codice
+		</FluentLabel>
+		<div>
+			<FluentButton IconEnd="@(new Icons.Regular.Size16.Search())"
+						  Appearance="Appearance.Outline"
+						  OnClick="@RicercaClienteDialog">
+				Ricerca cliente
+			</FluentButton>
+		</div>
+	</FluentGridItem>
+
+	<FluentGridItem sm="12" md="6">
+		<FluentLabel Weight="FontWeight.Bold">
+			Punto di prelievo:
+		</FluentLabel>
+		<FluentLabel>
+			@puntoDiPrelievo.Denominazione @puntoDiPrelievo.Indirizzo @puntoDiPrelievo.Codice
+		</FluentLabel>
+		<div>
+			<FluentButton IconEnd="@(new Icons.Regular.Size16.Search())"
+						  Appearance="Appearance.Outline"
+						  OnClick="@RicercaPuntoDiPrelievoDialog">
+				Ricerca in anagrafica
+			</FluentButton>
+			<FluentButton IconEnd="@(new Icons.Regular.Size16.Edit())"
+						  Appearance="Appearance.Outline"
+						  OnClick="@PuntoDiPrelievoDialog">
+				Inserimento nuovo punto
+			</FluentButton>
+		</div>
+	</FluentGridItem>
+
+	<FluentGridItem sm="12" md="6">
+		<FluentLabel Weight="FontWeight.Bold">
+			Data prelievo:
+		</FluentLabel>
+		<FluentDatePicker @bind-Value="@dataPrelievoSelezionata" />
+	</FluentGridItem>
+
+	<FluentGridItem sm="12" md="6">
+		<FluentSelect TOption="ConfigurazioneOperatore.Ente.Matrice"
+					  Items="@matrici"
+					  Id="matrici-listbox"
+					  OptionValue="@(p => p.Codice)"
+					  OptionText="@(p => p.Descrizione)"
+					  @bind-Value="@codiceMatriceSelezionata"
+					  SelectedOptionChanged="@ModificaSelezioneMatrice"
+					  Height="200px"
+					  LabelTemplate="EtichettaMatriceFragment" />
+	</FluentGridItem>
+	@code {
+			RenderFragment EtichettaMatriceFragment => @<FluentLabel Weight="FontWeight.Bold">Matrice:</FluentLabel> ;
+	}
+
+	<FluentGridItem sm="12" md="6">
+		<FluentSelect TOption="ConfigurazioneOperatore.Ente.Matrice.Argomento"
+					  Items="@argomenti"
+					  Id="argomenti-listbox"
+					  OptionText="@(i => i.Descrizione)"
+					  OptionValue="@(i => i.Codice)"
+					  @bind-Value="@codiceArgomentoSelezionato"
+					  SelectedOptionChanged="@InizializzaPacchetti"
+					  Height="200px"
+					  LabelTemplate="EtichettaArgomentoFragment" />
+	</FluentGridItem>
+	@code {
+			RenderFragment EtichettaArgomentoFragment => @<FluentLabel Weight="FontWeight.Bold">Argomento:</FluentLabel> ;
+	}
+
+	<FluentGridItem sm="12" md="6">
+		<FluentSelect TOption="SedeAccettazione"
+					  Items="@sediAccettazione"
+					  Id="sediaccettazione-listbox"
+					  OptionText="@(i => i.Denominazione)"
+					  OptionValue="@(i => i.Codice)"
+					  @bind-Value="@codiceSedeAccettazioneSelezionata"
+					  SelectedOptionChanged="@((SedeAccettazione sede) => CaricaPacchetti(sede))"
+					  Height="200px"
+					  LabelTemplate="EtichettaSedeAccettazioneFragment" />
+	</FluentGridItem>
+	@code {
+			RenderFragment EtichettaSedeAccettazioneFragment => @<FluentLabel Weight="FontWeight.Bold">Sede accettazione:</FluentLabel> ;
+	}
+
+	<FluentGridItem sm="12" md="6">
+		<FluentSelect TOption="string"
+					  Items="@tipiCampionamento"
+					  Id="tipocampionamento-listbox"
+					  OptionText="@(i => i)"
+					  OptionValue="@(i => i)"
+					  @bind-Value="@tipoCampionamentoSelezionato"
+					  Height="200px"
+					  LabelTemplate="EtichettaTipoCampionamentoFragment" />
+	</FluentGridItem>
+	@code {
+			RenderFragment EtichettaTipoCampionamentoFragment => @<FluentLabel Weight="FontWeight.Bold">Tipo campionamento:</FluentLabel> ;
+	}
+</FluentGrid>
+
+<FluentLabel Typo="Typography.H3">Pacchetti</FluentLabel>
+
+<div style="height: 5px; padding-top: 2px;">
+	<FluentProgress Visible="@aggiornamentoPacchettiInCorso"></FluentProgress>
+</div>
+
+<FluentCheckbox Label="Seleziona tutti/nessuno" Disabled="@nessunPacchetto" CheckStateChanged="@SelezionaTutti" @bind-Value="@selezionaTutti" />
+
+@code
+{
+	bool selezionaTutti = false;
+	private void SelezionaTutti()
+	{
+		//selezionaTutti = !selezionaTutti;
+		foreach (var i in pacchettiSelezionabili)
+		{
+			i.Selezionato = selezionaTutti;
+		}
+	}
+}
+
+<FluentDataGrid id="defaultGrid" Items=pacchettiSelezionabili.AsQueryable() EmptyContent="PacchettiEmptyContentFragment" TGridItem=PacchettoSelezionabile>
+	<TemplateColumn Class="multiline-text">
+		<FluentCheckbox @bind-Value="@context!.Selezionato" Label="@context!.CodiceDescrizione" />
+	</TemplateColumn>
+</FluentDataGrid>
+
+	@code {
+	RenderFragment NessunPacchettoTrovatoFragment => @<FluentLabel>Nessun pacchetto trovato corrispondente ai parametri selezionati</FluentLabel>;
+	RenderFragment SelezionareLaSedeFragment => @<FluentLabel>Selezionare la sede d'accettazione per visualizzare l'elenco dei pacchetti</FluentLabel>;
+	}
+
+<div class="floating-button-container">
+	<FluentStack VerticalAlignment="VerticalAlignment.Center">
+		<FluentLabel Typo="Typography.Body" Color="Color.Warning">
+			@messaggioErroreDatiIncompleti
+		</FluentLabel>
+		<FluentButton Appearance="Appearance.Accent" OnClick="@Nuovo" Loading="@creazioneInCorso">
+			Crea
+		</FluentButton>
+		<FluentButton Appearance="Appearance.Accent" OnClick="@Annulla">
+			Annulla
+		</FluentButton>
+	</FluentStack>
+</div>
+

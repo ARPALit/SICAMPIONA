@@ -1,0 +1,162 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@inject NavigationManager Navigation
+@inject IConfigurazioneOperatoreService infoOperatore
+
+<FluentLabel Typo="Typography.PageTitle" Class="pagetitle">Campionamento</FluentLabel>
+@if (Campionamento.Eliminato)
+{
+    <FluentLabel Typo="Typography.H5" Color="Color.Neutral" Style="color:#fff; background-color:#f00; padding: .5em; width: 60px; text-align: center;">Eliminato</FluentLabel>
+}
+<FluentLabel>
+    <strong>Ente:</strong> @Campionamento.Ente.Denominazione
+</FluentLabel>
+<FluentLabel>
+    <strong>Cliente:</strong> @Campionamento.Cliente.Denominazione
+</FluentLabel>
+<FluentLabel>
+    <strong>Matrice:</strong> @Campionamento.Matrice.Denominazione
+</FluentLabel>
+<FluentLabel>
+    <strong>Argomento:</strong> @Campionamento.Argomento.Denominazione
+</FluentLabel>
+<FluentLabel>
+    <strong>Tipo campionamento:</strong> @Campionamento.TipoCampionamento
+</FluentLabel>
+<FluentLabel>
+    <strong>Punto di prelievo ARPAL:</strong> <VisualizzaPuntoDiPrelievo PuntoDiPrelievo="@Campionamento.PuntoDiPrelievoARPAL" />
+</FluentLabel>
+<FluentLabel>
+    <strong>Punto di prelievo operatore:</strong> <VisualizzaPuntoDiPrelievo PuntoDiPrelievo="@Campionamento.PuntoDiPrelievoInseritoDaOperatore" />
+</FluentLabel>
+<FluentLabel>
+    <strong>Prelevatori:</strong> @string.Join(", ", Campionamento.Prelevatori.Select(p => $"{p.Cognome} {p.Nome}"))
+</FluentLabel>
+<FluentLabel>
+    <strong>Descrizione attività:</strong> @Campionamento.DescrizioneAttivita
+</FluentLabel>
+<FluentStack>
+    <FluentLabel>
+        <strong>Data prelievo:</strong> @Campionamento.DataPrelievo
+    </FluentLabel>
+    <FluentLabel>
+        <strong>Ora prelievo:</strong> @Campionamento.OraPrelievo
+    </FluentLabel>
+</FluentStack>
+<FluentStack>
+    <FluentLabel>
+        <strong>Data apertura campione:</strong> @Campionamento.DataAperturaCampione
+    </FluentLabel>
+    <FluentLabel>
+        <strong>Ora apertura campione:</strong> @Campionamento.OraAperturaCampione
+    </FluentLabel>
+    <FluentLabel>
+        <strong>Luogo apertura campione:</strong> @Campionamento.LuogoAperturaCampione
+    </FluentLabel>
+</FluentStack>
+<FluentLabel>
+    <strong>Email a cui inviare il verbale:</strong> @Campionamento.EmailInvioVerbale
+</FluentLabel>
+<FluentLabel>
+    <strong>PEC a cui inviare il verbale:</strong> @Campionamento.PECInvioVerbale
+</FluentLabel>
+<FluentLabel>
+    <strong>Campionamento collegato:</strong> @Campionamento.CampionamentoCollegato
+</FluentLabel>
+<FluentLabel>
+    <strong>Campionae bianco:</strong> @Campionamento.CampioneBianco
+</FluentLabel>
+<FluentLabel>
+    <strong>Sigla verbale:</strong> @Campionamento.SiglaVerbale
+</FluentLabel>
+<FluentLabel>
+    <strong>Nota accettazione:</strong> @Campionamento.NotaAccettazione?.Testo
+</FluentLabel>
+<FluentLabel Typo="Typography.H4">Misure in loco</FluentLabel>
+<ul>
+    @foreach (var misura in Campionamento.MisureInLoco)
+    {
+        <li><VisualizzaMisuraInLoco MisuraInLoco="@misura" /></li>
+    }
+</ul>
+<FluentLabel Typo="Typography.H4">Analiti</FluentLabel>
+<ul>
+    @foreach (var analita in Campionamento.Analiti)
+    {
+        <li><VisualizzaAnalita Analita="@analita" /></li>
+    }
+</ul>
+<FluentLabel>
+    <strong>Note:</strong> @Campionamento.Note
+</FluentLabel>
+<FluentLabel>
+    <strong>Data e ora chiusura:</strong> @Campionamento.DataOraChiusuraCampionamento
+</FluentLabel>
+<FluentLabel>
+    <strong>Ultimo aggiornamento:</strong> @Campionamento.UltimoAggiornamento.DataOra
+</FluentLabel>
+
+<div class="floating-button-container">
+    <FluentStack>
+        @if (infoOperatore.Autorizzato && !string.IsNullOrEmpty(Campionamento.UrlPDFVerbale))
+        {
+            <ConnessioneRete>
+                <Online>
+                    <FluentAnchor Href="@Campionamento.UrlPDFVerbale"
+                                  Target="_blank"
+                                  Appearance="Appearance.Outline"
+                                  IconStart="@(new Icons.Regular.Size20.DocumentArrowDown())">
+                        Verbale
+                    </FluentAnchor>
+                    @if (!string.IsNullOrEmpty(Campionamento.UrlPDFVerbaleFirmato))
+                    {
+                        <FluentAnchor Href="@Campionamento.UrlPDFVerbaleFirmato"
+                                      Target="_blank"
+                                      Appearance="Appearance.Outline"
+                                      IconStart="@(new Icons.Regular.Size20.DocumentArrowDown())">
+                            Verbale firmato
+                        </FluentAnchor>
+                    }
+                    else
+                    {
+                        <FluentButton Appearance="Appearance.Accent" OnClick="@CaricaVerbaleFirmato">
+                            Carica verbale firmato
+                        </FluentButton>
+                    }
+                </Online>
+            </ConnessioneRete>
+        }
+        <FluentButton Appearance="Appearance.Accent" OnClick="@Chiudi">
+            Chiudi
+        </FluentButton>
+    </FluentStack>
+</div>
+
+@code {
+    [Parameter] public Campionamento Campionamento { get; set; }
+
+    private void Chiudi()
+    {
+        Navigation.NavigateTo("./");
+    }
+    private void CaricaVerbaleFirmato()
+    {
+        Navigation.NavigateTo($"campionamento/caricaverbalefirmato/{Campionamento.IdCampionamento}");
+    }
+}

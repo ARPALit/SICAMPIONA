@@ -1,0 +1,52 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@page "/nessuna-configurazione"
+@inject NavigationManager Navigation
+@inject IConfiguration Configuration
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+<FluentHeader> Configurazione operatore non disponibile </FluentHeader>
+
+<div style="background-color: lightyellow; border: 0.5px solid silver; padding: 10px; margin: 10px;">
+    <FluentStack VerticalAlignment="VerticalAlignment.Center" HorizontalAlignment="HorizontalAlignment.Left">
+        <FluentIcon Value="@(new Icons.Regular.Size28.Warning())" Color="@Color.Error" />
+        <ConnessioneRete>
+            <Online>
+                <FluentStack Orientation="Orientation.Vertical">
+                    <FluentLabel Typo="Typography.Body">
+                        Non è disponibile la configurazione operatore; non è quindi possibile utilizzare l'applicazione. Fare login per autenticarsi e scaricare la configurazione.
+                    </FluentLabel>
+                    <FluentButton Appearance="Appearance.Accent" OnClick="@Login">Login SPID/CIE</FluentButton>
+                </FluentStack>
+            </Online>
+            <Offline>
+                <FluentLabel Typo="Typography.Body">
+                    Non è disponibile la configurazione operatore; non è quindi possibile effettuare nessuna attività. La connessione di rete è assente: verificare le impostazioni di rete e riavviare l'applicazione.
+                </FluentLabel>
+            </Offline>
+        </ConnessioneRete>
+    </FluentStack>
+</div>
+
+@code {
+    private void Login()
+    {
+        Navigation.NavigateToLogout("authentication/login");
+    }
+}

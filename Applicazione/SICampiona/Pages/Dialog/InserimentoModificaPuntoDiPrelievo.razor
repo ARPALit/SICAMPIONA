@@ -1,0 +1,89 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@implements IDialogContentComponent<PuntoDiPrelievo>
+@inject IAnagrafiche anagrafiche
+@using System.ComponentModel.DataAnnotations
+
+
+<h3>Punto di prelievo inserito da operatore</h3>
+
+<EditForm Model="Content" OnValidSubmit="Salva">
+	<DataAnnotationsValidator />
+	<FluentStack Orientation="Orientation.Vertical">
+		<FluentValidationSummary></FluentValidationSummary>
+		<FluentTextField @bind-Value=Content.Codice Label="Codice:" Maxlength="20"></FluentTextField>
+		<FluentTextField @bind-Value=Content.Denominazione Label="Denominazione:" Size="40" Maxlength="200"></FluentTextField>
+		<FluentSelect TOption="Comune"
+					  Label="Comune:"
+					  Items="@comuni"
+					  Id="comune-listbox"
+					  OptionValue="@(p => p.CodiceIstat)"
+					  OptionText="@(p => p.Denominazione)"
+					  @bind-Value="@codiceIstatComuneSelezionato"
+					  Height="200px" />
+		<FluentTextField @bind-Value=Content.Indirizzo Label="Indirizzo:" Size="40" Maxlength="200"></FluentTextField>
+		<FluentTextField @bind-Value=Content.Coordinate.Latitudine Label="Latitudine:" Maxlength="100"></FluentTextField>
+		<FluentTextField @bind-Value=Content.Coordinate.Longitudine Label="Longitudine:" Maxlength="100"></FluentTextField>
+	</FluentStack>
+
+	<FluentDialogFooter>
+		<FluentButton Appearance="Appearance.Accent" Type="ButtonType.Submit">Salva</FluentButton>
+		<FluentButton Appearance="Appearance.Accent" OnClick="Annulla">Annulla</FluentButton>
+	</FluentDialogFooter>
+</EditForm>
+
+@code {
+
+	[Parameter]
+	public PuntoDiPrelievo Content { get; set; } = default!;
+
+	[CascadingParameter]
+	public FluentDialog Dialog { get; set; }
+
+	private string codiceIstatComuneSelezionato;
+
+	IQueryable<Comune> comuni;
+
+	protected override async Task OnInitializedAsync()
+	{
+		// TODO: gestire il caso di assenza di connessione (salvare offline l'elenco comuni?)
+		var result = await anagrafiche.Comuni(null);
+		comuni = result.Data.AsQueryable();
+		if (Content.Comune.CodiceIstat == null)
+		{
+			// Se vuoto preseleziona il primo elemento della lista
+			codiceIstatComuneSelezionato = comuni.FirstOrDefault()?.CodiceIstat;
+		}
+		else
+			codiceIstatComuneSelezionato = Content.Comune.CodiceIstat;
+	}
+
+	private async Task Salva()
+	{
+		Content.Comune = comuni.FirstOrDefault(c => c.CodiceIstat == codiceIstatComuneSelezionato);
+
+		await Dialog.CloseAsync();
+	}
+
+	private async Task Annulla()
+	{
+		await Dialog.CancelAsync();
+	}
+}
+

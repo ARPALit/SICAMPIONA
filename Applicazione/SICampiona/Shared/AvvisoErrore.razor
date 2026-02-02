@@ -1,0 +1,98 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@inherits ComponentBase
+@inject NavigationManager navigationManager
+
+@if (!string.IsNullOrEmpty(MessaggioErrore))
+{
+	<div style="background-color: lightyellow; border: 0.5px solid silver; padding: 10px; margin: 10px;">
+		<FluentStack Orientation="Orientation.Vertical">
+			<FluentStack VerticalAlignment="VerticalAlignment.Center" HorizontalAlignment="HorizontalAlignment.Left">
+				<FluentIcon Value="@(new Icons.Regular.Size28.Warning())" Color="@Color.Error" />
+				<FluentLabel Typo="Typography.H3"> Si è verificato un errore </FluentLabel>
+			</FluentStack>
+			<FluentStack Orientation="Orientation.Vertical">
+				<FluentLabel Typo="Typography.Body">
+					@MessaggioErrore
+				</FluentLabel>
+				@if (!string.IsNullOrEmpty(DettagliErrore))
+				{
+					<FluentButton Appearance="Appearance.Stealth" @onclick="Dettagli">Dettagli errore</FluentButton>
+					@if (visualizzaDettagli)
+					{
+						<FluentLabel Typo="Typography.Body">
+							@DettagliErrore
+						</FluentLabel>
+					}
+				}
+				<FluentStack>
+					@if (VisualizzaComandoChiudi)
+					{
+						<FluentButton @onclick="Chiudi">Chiudi</FluentButton>
+					}
+					@if (VisualizzaComandoRicarica)
+					{
+						<FluentButton Appearance="Appearance.Accent" @onclick="Ricarica">Ricarica</FluentButton>
+					}
+					@if (VisualizzaComandoTornaHomePage)
+					{
+						<FluentButton Appearance="Appearance.Accent" @onclick="TornaHomePage">Torna alla pagina principale</FluentButton>
+					}
+				</FluentStack>
+			</FluentStack>
+		</FluentStack>
+	</div>
+}
+
+@code {
+	[Parameter]
+	public string MessaggioErrore { get; set; }
+	[Parameter]
+	public string DettagliErrore { get; set; } = string.Empty;
+	[Parameter]
+	public bool VisualizzaComandoRicarica { get; set; } = false;
+	[Parameter]
+	public bool VisualizzaComandoChiudi { get; set; } = false;
+	[Parameter]
+	public bool VisualizzaComandoTornaHomePage { get; set; } = true;
+
+	private bool visualizzaDettagli = false;
+
+	private void Chiudi()
+	{
+		MessaggioErrore = null;
+	}
+
+	private void Ricarica()
+	{
+		MessaggioErrore = null;
+		navigationManager.NavigateTo(navigationManager.Uri, forceLoad: true);
+	}
+	private void TornaHomePage()
+	{
+		MessaggioErrore = null;
+		navigationManager.NavigateTo("/");
+	}
+
+	private void Dettagli()
+	{
+		visualizzaDettagli = true;
+	}
+
+}

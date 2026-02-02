@@ -1,0 +1,89 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@implements IDialogContentComponent<List<MisuraInLoco>>
+
+<FluentDataGrid id="defaultGrid" Items=misureModificate.AsQueryable() GridTemplateColumns="2fr 2fr 1fr 1fr 3fr" EmptyContent="nessunDato" TGridItem=MisuraInLoco>
+	<TemplateColumn Title="Misurazione" Class="multiline-text">
+		<FluentLabel>
+			@context!.Codice - @context!.Descrizione
+		</FluentLabel>
+	</TemplateColumn>
+	<TemplateColumn Title="Metodo" Class="multiline-text">
+		<FluentLabel>
+			@context!.DescrizioneMetodo
+		</FluentLabel>
+	</TemplateColumn>
+	<TemplateColumn Title="U.M.">
+		<FluentLabel>
+			@context!.UnitaMisura
+		</FluentLabel>
+	</TemplateColumn>
+	<TemplateColumn Title="Valore">
+		<FluentTextField @bind-Value="@context!.Valore" Maxlength="20" />
+	</TemplateColumn>
+	<TemplateColumn Title="Note">
+		<FluentTextField @bind-Value="@context!.NoteOperatore" style="width: 100%;" Maxlength="1000" />
+	</TemplateColumn>
+</FluentDataGrid>
+
+<FluentDialogFooter>
+	<FluentButton Appearance="Appearance.Accent" OnClick="@Salva">Salva</FluentButton>
+	<FluentButton Appearance="Appearance.Accent" OnClick="@Annulla">Annulla</FluentButton>
+</FluentDialogFooter>
+
+@code {
+
+	[Parameter]
+	public List<MisuraInLoco> Content { get; set; } = default!;
+
+	[CascadingParameter]
+	public FluentDialog Dialog { get; set; }
+
+	RenderFragment nessunDato => @<FluentLabel></FluentLabel> ;
+
+	private List<MisuraInLoco> misureModificate;
+
+	protected override void OnInitialized()
+	{
+		// Copia le misurazioni da Content a misureModificate
+		misureModificate = Content.Select(m => new MisuraInLoco
+			{
+				Codice = m.Codice,
+				Descrizione = m.Descrizione,
+				CodiceMetodo = m.CodiceMetodo,
+				DescrizioneMetodo = m.DescrizioneMetodo,
+				UnitaMisura = m.UnitaMisura,
+				Valore = m.Valore,
+				NoteOperatore = m.NoteOperatore
+			}).ToList();
+	}
+	private async Task Salva()
+	{
+		// Copia le misurazioni da misureModificate a Content
+		Content.Clear();
+		Content.AddRange(misureModificate);
+
+		await Dialog.CloseAsync();
+	}
+
+	private async Task Annulla()
+	{
+		await Dialog.CancelAsync();
+	}
+}

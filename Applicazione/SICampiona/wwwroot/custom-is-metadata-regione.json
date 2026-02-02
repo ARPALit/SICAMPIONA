@@ -1,0 +1,8 @@
+{
+  "issuer": "https://idp.regione.liguria.it:443/oauth2/token",
+  "authorization_endpoint": "https://idp.regione.liguria.it/oauth2/authorize?authLevel=L1&agEntityId=arlpa_ge",
+  "token_endpoint": "https://idp.regione.liguria.it/oauth2/token",
+  "userinfo_endpoint": "https://idp.regione.liguria.it/oauth2/userinfo",
+  "end_session_endpoint": "https://idp.regione.liguria.it/oidc/logout/",
+  "jwks_uri": "https://idp.regione.liguria.it/oauth2/jwks"
+}

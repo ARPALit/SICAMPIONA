@@ -1,0 +1,335 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@using SICampiona.Model
+@using SICampiona.Pages.Visualizzazione
+@using SICampiona.Services
+@using Pages.Dialog
+@using System.Text
+@using SICampiona.Shared
+
+@inject ICampionamentiStorage campionamentiStorage
+@inject NavigationManager Navigation
+@inject IDialogService DialogService
+@inject IConfigurazioneOperatoreService infoOperatore
+
+<FluentLabel Typo="Typography.PageTitle" Class="pagetitle">Modifica campionamento</FluentLabel>
+
+<AvvisoErrore MessaggioErrore="@messaggioErrore"
+			  DettagliErrore="@dettagliErrore"
+			  VisualizzaComandoRicarica="@visualizzaComandoRicarica"
+			  VisualizzaComandoChiudi="@visualizzaComandoChiudi"
+			  VisualizzaComandoTornaHomePage="@visualizzaComandoTornaHomePage" />
+
+<FluentStack Orientation="Orientation.Vertical">
+
+	<FluentStack>
+		<div style="min-width: 240px;">
+			<strong>Ente:</strong>
+		</div>
+		@Campionamento.Ente.Denominazione
+	</FluentStack>
+
+	<FluentStack>
+		<div style="min-width: 240px;">
+			<strong>Cliente:</strong>
+		</div>
+		@Campionamento.Cliente.Denominazione
+	</FluentStack>
+
+	<FluentStack>
+		<div style="min-width: 240px;">
+			<strong>Matrice:</strong>
+		</div>
+		@Campionamento.Matrice.Denominazione
+	</FluentStack>
+
+	<FluentStack>
+		<div style="min-width: 240px;">
+			<strong>Argomento:</strong>
+		</div>
+		@Campionamento.Argomento.Denominazione
+	</FluentStack>
+
+	<FluentStack>
+		<div style="min-width: 240px;">
+			<strong>Tipo campionamento:</strong>
+		</div>
+		@Campionamento.TipoCampionamento
+	</FluentStack>
+
+	<FluentStack>
+		<FluentStack VerticalAlignment="VerticalAlignment.Center">
+			<div style="min-width: 240px;">
+				<strong>Punto di prelievo:</strong>
+			</div>
+
+			@if (Campionamento.PuntoDiPrelievoARPAL != null)
+			{
+				puntoDiPrelievo = Campionamento.PuntoDiPrelievoARPAL;
+			}
+			else
+			{
+				puntoDiPrelievo = Campionamento.PuntoDiPrelievoInseritoDaOperatore;
+			}
+			@puntoDiPrelievo.Denominazione @puntoDiPrelievo.Indirizzo @puntoDiPrelievo.Codice
+
+			<FluentButton Disabled="@(!infoOperatore.Autorizzato)"
+						  IconEnd="@(new Icons.Regular.Size16.Search())"
+						  Appearance="Appearance.Outline"
+						  OnClick="@RicercaPuntoDiPrelievoDialog">
+				Ricerca in anagrafica
+			</FluentButton>
+			<FluentButton Disabled="@(!infoOperatore.Autorizzato)"
+						  IconEnd="@(new Icons.Regular.Size16.Edit())"
+						  Appearance="Appearance.Outline"
+						  OnClick="@PuntoDiPrelievoDialog">
+				Inserimento nuovo punto
+			</FluentButton>
+		</FluentStack>
+	</FluentStack>
+
+
+	<FluentStack VerticalAlignment="VerticalAlignment.Center">
+		<div style="min-width: 240px;">
+			<FluentButton Style="font-weight:bold;"
+						  IconEnd="@(new Icons.Regular.Size16.Edit())"
+						  Appearance="Appearance.Stealth"
+						  @onclick="@PrelevatoriDialog">
+				Prelevatori:
+			</FluentButton>
+		</div>
+		@if (Campionamento.Prelevatori != null)
+		{
+			@string.Join(", ", Campionamento.Prelevatori.Select(p => $"{p.Cognome} {p.Nome}"))
+		}
+	</FluentStack>
+
+	<FluentStack VerticalAlignment="VerticalAlignment.Center">
+		<div style="min-width: 240px;">
+			<FluentButton Style="font-weight:bold;"
+						  IconEnd="@(new Icons.Regular.Size16.Edit())"
+						  Appearance="Appearance.Stealth"
+						  OnClick="@InserimentoDescrizioneAttivitaDialog">
+				Descrizione attività:
+			</FluentButton>
+		</div>
+		@Campionamento.DescrizioneAttivita
+	</FluentStack>
+
+
+	<FluentStack VerticalAlignment="VerticalAlignment.Center">
+		<div style="min-width: 240px;">
+			<FluentButton Style="font-weight:bold;"
+						  IconEnd="@(new Icons.Regular.Size16.Edit())"
+						  Appearance="Appearance.Stealth"
+						  OnClick="@InserimentoDataPrelievoDialog">
+				Data prelievo:
+			</FluentButton>
+		</div>
+		@Campionamento.DataPrelievo
+	</FluentStack>
+
+	<FluentStack VerticalAlignment="VerticalAlignment.Center">
+		<div style="min-width: 240px;">
+			<FluentButton Style="font-weight:bold;"
+						  IconEnd="@(new Icons.Regular.Size16.Edit())"
+						  Appearance="Appearance.Stealth"
+						  OnClick="@InserimentoOraPrelievoDialog">
+				Ora prelievo:
+			</FluentButton>
+		</div>
+		@Campionamento.OraPrelievo
+	</FluentStack>
+
+	<FluentStack VerticalAlignment="VerticalAlignment.Center">
+		<div style="min-width: 240px;">
+			<FluentButton Style="font-weight:bold;"
+						  IconEnd="@(new Icons.Regular.Size16.Edit())"
+						  Appearance="Appearance.Stealth"
+						  OnClick="@InserimentoDataAperturaCampioneDialog">
+				Data apertura campione:
+			</FluentButton>
+		</div>
+		@Campionamento.DataAperturaCampione
+	</FluentStack>
+
+	<FluentStack VerticalAlignment="VerticalAlignment.Center">
+		<div style="min-width: 240px;">
+			<FluentButton Style="font-weight:bold;"
+						  IconEnd="@(new Icons.Regular.Size16.Edit())"
+						  Appearance="Appearance.Stealth"
+						  OnClick="@InserimentoOraAperturaCampioneDialog">
+				Ora apertura campione:
+			</FluentButton>
+		</div>
+		@Campionamento.OraAperturaCampione
+	</FluentStack>
+
+	<FluentStack VerticalAlignment="VerticalAlignment.Center">
+		<div style="min-width: 240px;">
+			<FluentButton Style="font-weight:bold;"
+						  IconEnd="@(new Icons.Regular.Size16.Edit())"
+						  Appearance="Appearance.Stealth"
+						  OnClick="@LuogoAperturaCampioneDialog">
+				Luogo apertura campione:
+			</FluentButton>
+		</div>
+		@Campionamento.LuogoAperturaCampione
+	</FluentStack>
+
+	<FluentStack VerticalAlignment="VerticalAlignment.Center">
+		<div style="min-width: 240px;">
+			<FluentButton Style="font-weight:bold;"
+						  IconEnd="@(new Icons.Regular.Size16.Edit())"
+						  Appearance="Appearance.Stealth"
+						  OnClick="@InserimentoEmailInvioVerbaleDialog">
+				Email a cui inviare il verbale:
+			</FluentButton>
+		</div>
+		@Campionamento.EmailInvioVerbale
+	</FluentStack>
+
+	<FluentStack VerticalAlignment="VerticalAlignment.Center">
+		<div style="min-width: 240px;">
+			<FluentButton Style="font-weight:bold;"
+						  IconEnd="@(new Icons.Regular.Size16.Edit())"
+						  Appearance="Appearance.Stealth"
+						  OnClick="@InserimentoPECInvioVerbaleDialog">
+				PEC a cui inviare il verbale:
+			</FluentButton>
+		</div>
+		@Campionamento.PECInvioVerbale
+	</FluentStack>
+
+	<FluentStack VerticalAlignment="VerticalAlignment.Center">
+		<div style="min-width: 240px;">
+			<FluentButton Style="font-weight:bold;"
+						  IconEnd="@(new Icons.Regular.Size16.Edit())"
+						  Appearance="Appearance.Stealth"
+						  OnClick="@InserimentoCampionamentoCollegatoDialog">
+				Campionamento collegato:
+			</FluentButton>
+		</div>
+		@Campionamento.CampionamentoCollegato
+	</FluentStack>
+
+
+	<FluentStack VerticalAlignment="VerticalAlignment.Top">
+		<div style="min-width: 240px;">
+			<FluentButton Style="font-weight:bold;"
+						  IconEnd="@(new Icons.Regular.Size16.Edit())"
+						  Appearance="Appearance.Stealth"
+						  OnClick="@MisureInLocoDialog">
+				Misure in loco
+			</FluentButton>
+		</div>
+		<FluentDataGrid TGridItem="MisuraInLoco" Items="@Campionamento.MisureInLoco.AsQueryable()" EmptyContent="nessunaMisura">
+			<PropertyColumn Property="@(i => i.Codice + ' ' + i.Descrizione)" Title="Misurazione" Class="multiline-text" />
+			<PropertyColumn Property="@(i => i.DescrizioneMetodo)" Title="Metodo" Class="multiline-text" />
+			<PropertyColumn Property="@(i => i.UnitaMisura)" Title="U.M." Class="multiline-text" />
+			<PropertyColumn Property="@(i => i.Valore)" Title="Valore" Class="multiline-text" />
+			<PropertyColumn Property="@(i => i.NoteOperatore)" Title="Note" Class="multiline-text" />
+		</FluentDataGrid>
+	</FluentStack>
+
+	@code
+	{
+		RenderFragment nessunaMisura => @<FluentLabel>Nessuna misura</FluentLabel> ;
+	}
+
+	<FluentStack VerticalAlignment="VerticalAlignment.Top">
+		<div style="min-width: 240px;">
+			<FluentButton Disabled="@(!infoOperatore.Autorizzato)"
+						  Style="font-weight:bold;"
+						  IconEnd="@(new Icons.Regular.Size16.Edit())"
+						  Appearance="Appearance.Stealth"
+						  OnClick="@RicercaAnalitaDialog">
+				Analiti:
+			</FluentButton>
+		</div>
+		<FluentStack Orientation="Orientation.Vertical">
+			@foreach (var analita in Campionamento.Analiti.Where(i => !i.RimossoDaOperatore))
+			{
+				<FluentStack Orientation="Orientation.Horizontal" Style="border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+					<div>
+						<VisualizzaAnalita Analita="@analita" />
+					</div>
+					<div>
+						<FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"
+									  OnClick="@(() => EliminaAnalita(analita))">
+						</FluentButton>
+					</div>
+				</FluentStack>
+			}
+		</FluentStack>
+	</FluentStack>
+
+	<FluentStack VerticalAlignment="VerticalAlignment.Center">
+		<div style="min-width: 240px;">
+			<FluentButton Style="font-weight:bold;"
+						  IconEnd="@(new Icons.Regular.Size16.Edit())"
+						  Appearance="Appearance.Stealth"
+						  OnClick="@CampioneBiancoDialog">
+				Campione bianco:
+			</FluentButton>
+		</div>
+		@Campionamento.CampioneBianco
+	</FluentStack>
+
+	<FluentStack VerticalAlignment="VerticalAlignment.Center">
+		<div style="min-width: 240px;">
+			<FluentButton Style="font-weight:bold;"
+						  IconEnd="@(new Icons.Regular.Size16.Edit())"
+						  Appearance="Appearance.Stealth"
+						  OnClick="@NoteDialog">
+				Note:
+			</FluentButton>
+		</div>
+		@Campionamento.Note
+	</FluentStack>
+
+
+</FluentStack>
+
+<div class="floating-button-container">
+	<FluentStack VerticalAlignment="VerticalAlignment.Center">
+		<FluentLabel Typo="Typography.Body" Color="Color.Warning">
+			@DatiMancanti
+		</FluentLabel>
+		<FluentButton OnClick="@RichiestaConfermaCompletaCampionamento" Appearance="Appearance.Accent">
+			Completa
+		</FluentButton>
+		<FluentButton OnClick="@RichiestaConfermaEliminaCampionamento" BackgroundColor="#cc3300" Color="#ffffff">
+			Elimina
+		</FluentButton>
+		<FluentButton Appearance="Appearance.Accent" OnClick="@Chiudi">
+			Chiudi
+		</FluentButton>
+	</FluentStack>
+</div>
+
+@if (!string.IsNullOrEmpty(EsitoComando))
+{
+	<FluentStack VerticalAlignment="VerticalAlignment.Center">
+		<FluentIcon Value="@(new Icons.Regular.Size28.Warning())" Color="Color.Error" />
+		<FluentLabel Typo="Typography.Body" Color="Color.Error">
+			@EsitoComando
+		</FluentLabel>
+	</FluentStack>
+}

@@ -1,0 +1,21 @@
+﻿@page "/messagebox"
+@inject IDialogService DialogService
+
+<h3>Test MessageBox</h3>
+
+<FluentButton OnClick="@RichiestaConferma" Appearance="Appearance.Accent">Vuoi distruggere il mondo?</FluentButton>
+
+<p>
+    Risposta: @(canceled == null ? "" : (canceled == true ? "❌ No" : "✅ Sì"))
+</p>
+
+@code {
+    bool? canceled;
+
+    private async Task RichiestaConferma()
+    {
+        var dialog = await DialogService.ShowConfirmationAsync("Sei sicuro di voler distruggere il mondo?", "Sì", "...No", "Scelta importante");
+        var result = await dialog.Result;
+        canceled = result.Cancelled;
+    }
+}

@@ -1,0 +1,145 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@page "/anagrafiche"
+@using SICampiona.Model
+@using SICampiona.Services
+@inject IAnagrafiche anagrafiche
+
+<h3>Test anagrafiche</h3>
+
+<FluentLabel Typo="Typography.H2"> Analiti </FluentLabel>
+
+<FluentDataGrid Items="@analiti">
+	<PropertyColumn Property="@(c => c.Codice)" />
+	<PropertyColumn Property="@(c => c.Descrizione)" />
+	<PropertyColumn Property="@(c => c.CodiceMetodo)" />
+	<PropertyColumn Property="@(c => c.DescrizioneMetodo)" />
+</FluentDataGrid>
+<FluentButton OnClick="@CaricaAnaliti">Carica analiti</FluentButton>
+
+@code {
+	IQueryable<Analita> analiti;
+
+	private async Task CaricaAnaliti()
+	{
+		// In questa versione parametri sono ignorati
+		var result = await anagrafiche.Analiti("Codice matrice", null, null, null);
+		// TODO: gestire i casi di fallimento
+		analiti = result.Data.AsQueryable();
+	}
+}
+
+<FluentLabel Typo="Typography.H2"> Punti di prelievo </FluentLabel>
+
+<FluentDataGrid Items="@puntiDiPrelievo">
+	<PropertyColumn Property="@(c => c.Codice)" />
+	<PropertyColumn Property="@(c => c.Denominazione)" />
+	<PropertyColumn Property="@(c => c.Indirizzo)" />
+	<PropertyColumn Property="@(c => c.Comune)" />
+</FluentDataGrid>
+<FluentButton OnClick="@CaricaPuntiDiPrelievo">Carica punti di prelievo</FluentButton>
+
+@code {
+	IQueryable<PuntoDiPrelievo> puntiDiPrelievo;
+
+	private async Task CaricaPuntiDiPrelievo()
+	{
+		// In questa versione parametri sono ignorati
+		var result = await anagrafiche.PuntiDiPrelievo("010025", null);
+		// TODO: gestire i casi di fallimento
+		puntiDiPrelievo = result.Data.AsQueryable();
+	}
+}
+
+<FluentLabel Typo="Typography.H2"> Clienti </FluentLabel>
+
+<FluentDataGrid Items="@clienti">
+	<PropertyColumn Property="@(c => c.Codice)" />
+	<PropertyColumn Property="@(c => c.Denominazione)" />
+	<PropertyColumn Property="@(c => c.PartitaIVA)" />
+</FluentDataGrid>
+<FluentButton OnClick="@CaricaClienti">Carica clienti</FluentButton>
+
+@code {
+	IQueryable<ClienteConIndirizzo> clienti;
+
+	private async Task CaricaClienti()
+	{
+		var result = await anagrafiche.Clienti("Denominazione");
+		// TODO: gestire i casi di fallimento
+		clienti = result.Data.AsQueryable();
+	}
+}
+
+<FluentLabel Typo="Typography.H2"> Comuni </FluentLabel>
+
+<FluentDataGrid Items="@comuni">
+	<PropertyColumn Property="@(c => c.CodiceIstat)" />
+	<PropertyColumn Property="@(c => c.Denominazione)" />
+</FluentDataGrid>
+<FluentButton OnClick="@CaricaComuni">Carica comuni</FluentButton>
+
+@code {
+	IQueryable<Comune> comuni;
+
+	private async Task CaricaComuni()
+	{
+		// Il filtro funziona
+		//var result = await anagrafiche.Comuni(null);
+		var result = await anagrafiche.Comuni("gen");
+		// TODO: gestire i casi di fallimento
+		comuni = result.Data.AsQueryable();
+	}
+}
+
+<FluentLabel Typo="Typography.H2"> Pacchetti </FluentLabel>
+
+<FluentDataGrid Items="@pacchetti">
+	<PropertyColumn Property="@(c => c.Codice)" />
+	<PropertyColumn Property="@(c => c.Descrizione)" />
+</FluentDataGrid>
+<FluentButton OnClick="@CaricaPacchetti">Carica pacchetti</FluentButton>
+
+@code {
+	IQueryable<Pacchetto> pacchetti;
+
+	private async Task CaricaPacchetti()
+	{
+		var result = await anagrafiche.Pacchetti("MATR", null);
+		pacchetti = result.Data.AsQueryable();
+	}
+}
+
+<FluentLabel Typo="Typography.H2"> Contenitori </FluentLabel>
+
+<FluentDataGrid Items="@contenitori">
+	<PropertyColumn Property="@(c => c.Tipo)" />
+	<PropertyColumn Property="@(c => c.Quantita)" />
+</FluentDataGrid>
+<FluentButton OnClick="@CaricaContenitori">Carica contenitori</FluentButton>
+
+@code {
+	IQueryable<Contenitore> contenitori;
+
+	private async Task CaricaContenitori()
+	{
+		var result = await anagrafiche.Contenitori("PK001");
+		contenitori = result.Data.AsQueryable();
+	}
+}

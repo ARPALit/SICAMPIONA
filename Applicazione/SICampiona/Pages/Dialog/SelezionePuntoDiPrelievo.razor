@@ -1,0 +1,149 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@using SICampiona.Shared
+@implements IDialogContentComponent<PuntoDiPrelievo>
+@inject IAnagrafiche anagrafiche
+@inject IConfigurazioneOperatoreService infoOperatore
+
+<AvvisoErrore MessaggioErrore="@messaggioErrore"
+			  DettagliErrore="@dettagliErrore"
+			  VisualizzaComandoRicarica="@visualizzaComandoRicarica"
+			  VisualizzaComandoChiudi="@visualizzaComandoChiudi"
+			  VisualizzaComandoTornaHomePage=@visualizzaComandoTornaHomePage />
+
+<FluentStack VerticalAlignment="VerticalAlignment.Center">
+	<FluentSelect TOption="Comune"
+				  Label="Comune:"
+				  Items="@comuni"
+				  Id="comuni-listbox"
+				  OptionValue="@(p => p.CodiceIstat)"
+				  OptionText="@(p => p.Denominazione)"
+				  @bind-Value="@codiceIstatComuneSelezionato"
+				  Height="200px"
+				  Width="250px" />
+	<FluentTextField @bind-Value=parteDenominazioneCodice
+					 Label="Codice o descrizione del punto di prelievo (anche parziale):"></FluentTextField>
+	<FluentButton IconEnd="@(new Icons.Regular.Size24.Search())"
+				  OnClick="@Cerca" />
+</FluentStack>
+
+<div style="height: 400px; overflow-y: scroll;">
+	<FluentDataGrid Items="@puntiDiPrelievoTrovati"
+					GridTemplateColumns="10% 15% 20% 55%"
+					EmptyContent="nessunDatoFragment"
+					GenerateHeader="GenerateHeaderOption.Sticky"
+					Loading="@ricercaInCorso"
+					LoadingContent="ricercaInCorsoFragment">
+		<TemplateColumn Align="@Align.End">
+			<FluentButton IconEnd="@(new Icons.Regular.Size16.Checkmark())" OnClick="@(() => Seleziona(context))" />
+		</TemplateColumn>
+		<PropertyColumn Property="@(c => c.Codice)" />
+		<PropertyColumn Property="@(c => c.Denominazione)" Class="multiline-text" />
+		<PropertyColumn Property="@(c => c.Indirizzo)" Class="multiline-text" />
+	</FluentDataGrid>
+</div>
+
+<FluentDialogFooter>
+	<FluentButton Appearance="Appearance.Accent" OnClick="@Annulla">Annulla</FluentButton>
+</FluentDialogFooter>
+
+
+@code {
+
+	[Parameter]
+	public PuntoDiPrelievo Content { get; set; } = default!;
+
+	[CascadingParameter]
+	public FluentDialog Dialog { get; set; }
+	private string nessunRisultato = "";
+	RenderFragment nessunDatoFragment => @<FluentLabel>@nessunRisultato</FluentLabel> ;
+	RenderFragment ricercaInCorsoFragment => @<FluentProgressRing></FluentProgressRing> ;
+
+	private bool ricercaInCorso = false;
+
+	#region Gestione errore
+	private string messaggioErrore = null;
+	private string dettagliErrore;
+	private bool visualizzaComandoRicarica = false;
+	private bool visualizzaComandoChiudi = false;
+	private bool visualizzaComandoTornaHomePage = false;
+	#endregion
+
+	List<Comune> comuni = new List<Comune>();
+
+	private string codiceIstatComuneSelezionato;
+
+	private string parteDenominazioneCodice;
+
+	IQueryable<PuntoDiPrelievo> puntiDiPrelievoTrovati;
+
+	protected override async Task OnInitializedAsync()
+	{
+		var result = await anagrafiche.Comuni(null);
+		if (result.IsSuccess)
+		{
+			comuni = result.Data;
+			codiceIstatComuneSelezionato = comuni.FirstOrDefault()?.CodiceIstat;
+		}
+		else
+		{
+			messaggioErrore = "Non è stato possibile recuperare l'elenco dei comuni";
+			dettagliErrore = $"{result.ErrorMessage} - {result.ErrorDetails}";
+			visualizzaComandoRicarica = false;
+			visualizzaComandoChiudi = true;
+			visualizzaComandoTornaHomePage = false;
+		}
+	}
+
+	private async Task Cerca()
+	{
+		ricercaInCorso = true;
+		var result = await anagrafiche.PuntiDiPrelievo(codiceIstatComuneSelezionato, parteDenominazioneCodice);
+		nessunRisultato = "Nessun punto trovato";
+		if (result.IsSuccess)
+		{
+			puntiDiPrelievoTrovati = result.Data.AsQueryable();
+		}
+		else
+		{
+			messaggioErrore = "Non è stato possibile recuperare l'elenco dei punti di prelievo";
+			dettagliErrore = $"{result.ErrorMessage} - {result.ErrorDetails}";
+			visualizzaComandoRicarica = false;
+			visualizzaComandoChiudi = true;
+			visualizzaComandoTornaHomePage = false;
+		}
+		ricercaInCorso = false;
+	}
+
+	private async Task Seleziona(PuntoDiPrelievo puntoDiPrelievoSelezionato)
+	{
+		Content.Codice = puntoDiPrelievoSelezionato.Codice;
+		Content.Denominazione = puntoDiPrelievoSelezionato.Denominazione;
+		Content.Indirizzo = puntoDiPrelievoSelezionato.Indirizzo;
+		Content.Comune = puntoDiPrelievoSelezionato.Comune;
+		Content.Coordinate = puntoDiPrelievoSelezionato.Coordinate;
+
+		await Dialog.CloseAsync();
+	}
+
+	private async Task Annulla()
+	{
+		await Dialog.CancelAsync();
+	}
+}

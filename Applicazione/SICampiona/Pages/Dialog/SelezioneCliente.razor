@@ -1,0 +1,122 @@
+﻿@*
+  Nome del progetto: SICampiona
+  Copyright (C) 2025 Agenzia regionale per la protezione dell'ambiente ligure
+
+  Questo programma è software libero: puoi ridistribuirlo e/o modificarlo
+  secondo i termini della GNU Affero General Public License pubblicata dalla
+  Free Software Foundation, sia la versione 3 della licenza, sia (a tua scelta)
+  qualsiasi versione successiva.
+
+  Questo programma è distribuito nella speranza che possa essere utile,
+  ma SENZA ALCUNA GARANZIA; senza nemmeno la garanzia implicita di
+  COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Vedi la
+  GNU Affero General Public License per ulteriori dettagli.
+
+  Dovresti aver ricevuto una copia della GNU Affero General Public License
+  insieme a questo programma. In caso contrario, vedi <https://www.gnu.org/licenses/>.
+*@
+
+@using SICampiona.Shared
+@implements IDialogContentComponent<ClienteConIndirizzo>
+@inject IAnagrafiche anagrafiche
+
+<AvvisoErrore MessaggioErrore="@messaggioErrore"
+			  DettagliErrore="@dettagliErrore"
+			  VisualizzaComandoRicarica="@visualizzaComandoRicarica"
+			  VisualizzaComandoChiudi="@visualizzaComandoChiudi"
+			  VisualizzaComandoTornaHomePage=@visualizzaComandoTornaHomePage />
+
+<FluentStack VerticalAlignment="VerticalAlignment.Center">
+	<FluentTextField @bind-Value=parteDenominazioneCodice
+					 Label="Denominazione o codice del cliente (anche parziale, almeno due caratteri):"></FluentTextField>
+	<FluentButton IconEnd="@(new Icons.Regular.Size24.Search())"
+				  OnClick="@Cerca" />
+</FluentStack>
+
+<div style="height: 400px; overflow-y: scroll;">
+	<FluentDataGrid Items="@clientiTrovati"
+					GridTemplateColumns="10% 15% 25% 15% 15% 20%"
+					EmptyContent="nessunDatoFragment"
+					GenerateHeader="GenerateHeaderOption.Sticky"
+					Loading="@ricercaInCorso"
+					LoadingContent="ricercaInCorsoFragment">
+		<TemplateColumn Align="@Align.End">
+			<FluentButton IconEnd="@(new Icons.Regular.Size16.Checkmark())" OnClick="@(() => Seleziona(context))" />
+		</TemplateColumn>
+		<PropertyColumn Property="@(c => c.Codice)" Title="Codice" />
+		<PropertyColumn Property="@(c => c.Denominazione)" Title="Denominazione" Class="multiline-text" />
+		<PropertyColumn Property="@(c => c.CodiceFiscale)" Title="Codice fiscale" />
+		<PropertyColumn Property="@(c => c.PartitaIVA)" Title="Partita IVA" />
+		<PropertyColumn Property="@(c => c.IndirizzoCompleto)" Title="Indirizzo" Class="multiline-text" />
+	</FluentDataGrid>
+</div>
+
+<FluentDialogFooter>
+	<FluentButton Appearance="Appearance.Accent" OnClick="@Annulla">Annulla</FluentButton>
+</FluentDialogFooter>
+
+@code {
+
+	[Parameter]
+	public ClienteConIndirizzo Content { get; set; } = default!;
+
+	[CascadingParameter]
+	public FluentDialog Dialog { get; set; }
+	private string nessunRisultato = "";
+	RenderFragment nessunDatoFragment => @<FluentLabel>@nessunRisultato</FluentLabel> ;
+	RenderFragment ricercaInCorsoFragment => @<FluentProgressRing></FluentProgressRing> ;
+
+	private bool ricercaInCorso = false;
+
+	#region Gestione errore
+	private string messaggioErrore = null;
+	private string dettagliErrore;
+	private bool visualizzaComandoRicarica = false;
+	private bool visualizzaComandoChiudi = false;
+	private bool visualizzaComandoTornaHomePage = false;
+	#endregion
+
+	private string parteDenominazioneCodice;
+
+	IQueryable<ClienteConIndirizzo> clientiTrovati;
+
+	private async Task Cerca()
+	{
+		if (String.IsNullOrEmpty(parteDenominazioneCodice) || parteDenominazioneCodice.Length < 2)
+		{
+			return;
+		}
+		ricercaInCorso = true;
+
+		var result = await anagrafiche.Clienti(parteDenominazioneCodice);
+		nessunRisultato = "Nessun cliente trovato";
+		if (result.IsSuccess)
+		{
+			clientiTrovati = result.Data.AsQueryable();
+		}
+		else
+		{
+			messaggioErrore = "Non è stato possibile recuperare l'elenco delle anagrafiche";
+			dettagliErrore = $"{result.ErrorMessage} - {result.ErrorDetails}";
+			visualizzaComandoRicarica = false;
+			visualizzaComandoChiudi = true;
+			visualizzaComandoTornaHomePage = false;
+		}
+
+		ricercaInCorso = false;
+	}
+
+	private async Task Seleziona(ClienteConIndirizzo clienteSelezionato)
+	{
+		Content.Codice = clienteSelezionato.Codice;
+		Content.Denominazione = clienteSelezionato.Denominazione;
+		Content.PartitaIVA = clienteSelezionato.PartitaIVA;
+		Content.CodiceFiscale = clienteSelezionato.CodiceFiscale;
+		await Dialog.CloseAsync();
+	}
+
+	private async Task Annulla()
+	{
+		await Dialog.CancelAsync();
+	}
+}
