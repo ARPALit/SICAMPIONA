@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta content="text/html" charset="utf-8" http-equiv="Content-Type" />
+		<title>Verbale campionamento</title>
+	</head>
+	<body>
+		<p>In allegato il verbale del seguente campionamento:</p>
+		<p>N° verbale: [$SiglaVerbale$]</p>
+		<p>Cliente: [$Cliente$]</p>
+		<p>Ente: [$Ente$]</p>	  	  
+		<p>Data e ora: [$DataCampioamento$] [$OraCampioamento$]</p>
+		<p>Punto di prelievo: [$CodicePuntoPrelievo$] - [$DenominazionePuntoPrelievo$]</p>
+		<p>Indirizzo: [$IndirizzoPuntoPrelievo$] [$ComunePuntoPrelievo$]</p>
+	</body>
+</html>
